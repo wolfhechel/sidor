@@ -131,7 +131,7 @@
 			flex: none;
 			max-width: 100%;
 			scroll-snap-align: start;
-			scroll-snap-stop: normal;
+			scroll-snap-stop: always;
 			overflow-y: scroll;
 
 			h1 {
