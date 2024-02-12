@@ -10,7 +10,7 @@
 
 	:global(body) {
 		--border-color: #f0e9e9;
-		--primary-color: #0085ff;
+		--primary-color: #f65e1c;
 		--content-size: 600px;
 		--button-hover-color: rgb(243, 243, 248);
 		--text-secondary: rgb(84, 86, 100);

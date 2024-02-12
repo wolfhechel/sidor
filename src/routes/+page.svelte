@@ -78,7 +78,7 @@
 		height: 100%;
 		margin: 0 auto;
 		display: flex;
-		flex-direction: column-reverse;
+		flex-direction: column;
 		width: fit-content;
 		max-width: 100%;
 
@@ -93,8 +93,8 @@
 		position: sticky;
 		top: 0;
 		background-color: white;
-		height: 43px;
-		border-top: 1px solid var(--border-color);
+		height: 45px;
+		border-bottom: 1px solid var(--border-color);
 		display: flex;
 		gap: 5px;
 	}

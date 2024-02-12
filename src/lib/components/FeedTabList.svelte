@@ -56,7 +56,7 @@
                 display: block;
                 padding: 12px;
                 white-space: nowrap;
-                border-top: 2px solid transparent;
+                border-bottom: 2px solid transparent;
                 letter-spacing: 0.25px;
                 font-weight: 700;
                 text-align:center;

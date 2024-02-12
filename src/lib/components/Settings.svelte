@@ -39,7 +39,7 @@
             span {
                 border-top: 1px solid var(--text-color);
                 border-bottom: 1px solid var(--text-color);
-                width: 100%;
+                width: 20px;
 
                 transform-origin: left center;
                 transform: rotate(0deg);
@@ -96,7 +96,7 @@
             display: block;
             position: absolute;
             right: 0;
-            bottom: 42px;
+            top: 47px;
             background-color: var(--background-color);
             width: 100%;
         }

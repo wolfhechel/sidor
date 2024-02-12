@@ -1,0 +1,33 @@
+{
+    "name": "Sidor App",
+    "short_name": "Sidor",
+    "description": "Scroll-centric feed reader, turning doomscrolling into productivity.",
+    "start_url": "/",
+    "theme_color": "#f65e1c",
+    "background_color": "#ffffff",
+    "display": "fullscreen",
+    "icons": [
+        {
+            "src": "images/maskable_icon_x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "images/maskable_icon_x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "images/maskable_icon_x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "images/maskable_icon_x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}
