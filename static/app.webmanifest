@@ -4,7 +4,7 @@
     "id": "sidor",
     "scope": "/",
     "description": "Scroll-centric feed reader, turning doomscrolling into productivity.",
-    "start_url": "/",
+    "start_url": "/sidor",
     "theme_color": "#f65e1c",
     "background_color": "#ffffff",
     "display": "fullscreen",
