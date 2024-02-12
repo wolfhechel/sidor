@@ -96,7 +96,7 @@
             display: block;
             position: absolute;
             right: 0;
-            top: 45px;
+            bottom: 42px;
             background-color: var(--background-color);
             width: 100%;
         }

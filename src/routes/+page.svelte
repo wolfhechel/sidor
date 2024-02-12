@@ -35,19 +35,14 @@
 			name: "Datajournalism"
 		}
 	];
-	
 
-	const scrollEnd = (ev: Event) => {
+	const scroll = (ev: Event) => {
 		let el: HTMLElement = ev.target as HTMLElement;
 
-		let feedIndex = Math.floor(el.scrollLeft / el.clientWidth);
+		let feedIndex = Math.round(el.scrollLeft / el.clientWidth);
 		let activeFeed = feeds.at(feedIndex);
 
 		window.location.hash = `#${activeFeed?.id}`;
-	}
-
-	const bindScrollEnd = (el: HTMLElement) => {
-		el.addEventListener('scrollend', scrollEnd);
 	}
 </script>
 
@@ -67,13 +62,12 @@
 		</aside>
 	</header>
 
-	<ul dir="ltr" use:bindScrollEnd>
-		{#each feeds as feed}
+	<ul dir="ltr" on:scrollend={scroll}>
+	{#each feeds as feed}
 		<li id={feed.id}>
-			<h1>{feed.name}</h1>
-			<Feed />
+			<Feed {feed} />
 		</li>
-		{/each}
+	{/each}
 	</ul>
 </main>
 
@@ -84,7 +78,7 @@
 		height: 100%;
 		margin: 0 auto;
 		display: flex;
-		flex-direction: column;
+		flex-direction: column-reverse;
 		width: fit-content;
 		max-width: 100%;
 
@@ -99,7 +93,8 @@
 		position: sticky;
 		top: 0;
 		background-color: white;
-		border-bottom: 1px solid var(--border-color);
+		height: 43px;
+		border-top: 1px solid var(--border-color);
 		display: flex;
 		gap: 5px;
 	}
@@ -110,6 +105,7 @@
 		flex: 1;
 		-ms-overflow-style: none;
 		scrollbar-width: none;
+
 		&::-webkit-scrollbar {
 			display: none;
 		}
@@ -133,10 +129,6 @@
 			scroll-snap-align: start;
 			scroll-snap-stop: always;
 			overflow-y: scroll;
-
-			h1 {
-				display: none;
-			}
 		}
 	}
 
@@ -173,22 +165,6 @@
 				width: auto;
 				flex: 1;
 				padding-top: 60px;
-			}
-		}
-
-		ul li {
-			h1 {
-				display: block;
-				margin: 0;
-				padding: 15px;
-				border-bottom: 1px solid var(--border-color);
-				margin: 0;
-				top: 0;
-				position: sticky;
-				background-color: var(--background-color);
-				font-size: 1.5em;
-				height: 60px;
-    			box-sizing: border-box;
 			}
 		}
 	}

@@ -18,7 +18,7 @@
     <div>
         <header>
             <address>
-                <b>{post.author}</b><a rel="author">{post.source}</a>
+                <b>{post.author}</b><span>{post.source}</span>
             </address>
         </header>
         <span>
@@ -42,7 +42,7 @@
                 gap: 5px;
                 font-style: normal;
 
-                a {
+                span {
                     text-decoration: none;
                     color: var(--text-secondary);
                 }
