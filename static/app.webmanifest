@@ -1,6 +1,8 @@
 {
     "name": "Sidor App",
     "short_name": "Sidor",
+    "id": "sidor",
+    "scope": "/",
     "description": "Scroll-centric feed reader, turning doomscrolling into productivity.",
     "start_url": "/",
     "theme_color": "#f65e1c",
