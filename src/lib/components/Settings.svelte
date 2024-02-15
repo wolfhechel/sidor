@@ -1,22 +1,57 @@
+<script lang="ts">
+    import type { ComponentType } from "svelte";
+    import ManageFeeds from "./ManageFeeds.svelte";
+    import Dialog from "./Dialog.svelte";
+
+    let checked = false;
+    let selectedOption: Option | undefined;
+
+    interface Option {
+        label: string;
+        component: ComponentType;
+    }
+
+    let options: Option[] = [
+        {
+            label: "Manage channels",
+            component: ManageFeeds,
+        },
+    ];
+
+    const onClick = (index: number) => {
+        let option: Option = options[index];
+
+        selectedOption = option;
+        checked = false;
+    };
+</script>
+
 <div>
-    <input type="checkbox" id="toggle-settings-page" />
+    <input bind:checked type="checkbox" id="toggle-settings-page" />
     <label id="settings-container" for="toggle-settings-page">
         <span />
         <span />
         <span />
     </label>
     <ul>
-        <li>
-            <button>Manage feeds</button>
-        </li>
-        <li>
-            <button>Settings</button>
-        </li>
+        {#each options as option, i}
+            <li>
+                <button on:click={() => onClick(i)}>{option.label}</button>
+            </li>
+        {/each}
     </ul>
 </div>
 
+{#if selectedOption}
+    <Dialog
+        label={selectedOption.label}
+        on:close={() => (selectedOption = undefined)}
+        ><svelte:component this={selectedOption.component} /></Dialog
+    >
+{/if}
+
 <style lang="scss">
-	@use "$lib/breakpoints";
+    @use "$lib/breakpoints";
 
     div {
         border-left: 1px solid var(--border-color);
@@ -43,7 +78,7 @@
 
                 transform-origin: left center;
                 transform: rotate(0deg);
-                transition: .2s ease-in-out;
+                transition: 0.2s ease-in-out;
             }
         }
 
@@ -113,7 +148,7 @@
                 min-width: 300px;
                 gap: 10px;
                 padding: 10px;
-                
+
                 li {
                     border-bottom: 0;
                 }

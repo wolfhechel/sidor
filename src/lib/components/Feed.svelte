@@ -1,28 +1,42 @@
 <script lang="ts">
-    import type { Post as PostType } from "$lib/components/Post.svelte";
-    import type { FeedItem } from "./FeedTabList.svelte";
-    import Post from "./Post.svelte";
+	import type { Channel } from "$lib/data";
+	import { onMount } from "svelte";
+	import Post from "./Post.svelte";
+	import { get, type Item } from "$lib/granary";
+	import {
+		writable,
+		type Readable,
+		type Writable,
+		derived,
+	} from "svelte/store";
 
-	export let feed: FeedItem;
+	export let channel: Channel;
 
-	let posts: PostType[] = [...Array(50).keys()].map(() => {
-		return {
-			id: 0,
-			author: "Author",
-			source: "Hacker News",
-			avatar: null,
-			content:
-				"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-		};
+	let data: Writable<Item[]> = writable([]);
+
+	let sortedFeed: Readable<Item[]> = derived([data], ([$data]) => {
+		return $data.sort(
+			(a, b) =>
+				Date.parse(b.date_published) - Date.parse(a.date_published),
+		);
+	});
+
+	onMount(() => {
+		channel.feeds.forEach((feed) => {
+			get(feed.url).then((feed) => {
+				$data.push(...feed.items);
+
+				$data = $data;
+			});
+		});
 	});
 </script>
 
+<h1>{channel.label}</h1>
 
-<h1>{feed.name}</h1>
-{#each posts as post}
-    <Post {post} />
+{#each $sortedFeed as post}
+	<Post {post} />
 {/each}
-
 
 <style lang="scss">
 	@use "$lib/breakpoints";

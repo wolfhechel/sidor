@@ -1,55 +1,83 @@
-<script lang="ts" context="module">
-    export type Post = {
-        id: number;
-        author: string;
-        avatar: string | null;
-        source: string;
-        content: string;
+<script lang="ts">
+    import type { Item } from "$lib/granary";
+    import { svelteTime } from "svelte-time";
+
+    export let post: Item;
+
+    const getAvatar = (post: Item): string => {
+        let avatar: string;
+
+        if (post.author.avatar) {
+            avatar = post.author.avatar;
+        } else {
+            let domain = new URL(post.author.url).hostname;
+            let size = 128;
+            avatar = `https://www.google.com/s2/favicons?domain=${domain}&sz=${size}`;
+        }
+
+        return avatar;
     };
 </script>
 
-<script lang="ts">
-    import Avatar from "./Avatar.svelte";
-    export let post: Post;
-</script>
-
 <article>
-    <Avatar avatar={post.avatar} alt={post.author} />
-    <div>
-        <header>
-            <address>
-                <b>{post.author}</b><span>{post.source}</span>
-            </address>
-        </header>
-        <span>
-            {post.content}
-        </span>
-    </div>
+    <header>
+        <address>
+            <img src={getAvatar(post)} /><b>{post.author.name}</b><time
+                use:svelteTime={{
+                    relative: true,
+                    timestamp: post.date_published,
+                }}
+            />
+        </address>
+
+        {#if post.title}
+            <a target="_blank" href={post.url}>{post.title}</a>
+        {/if}
+    </header>
+
+    <section>
+        {@html post.content_html}
+    </section>
 </article>
 
 <style lang="scss">
     article {
         display: flex;
-        gap: 10px;
+        flex-direction: column;
         padding: 10px 15px;
         border-bottom: 1px solid var(--border-color);
-    }
 
-    div {
         header {
+            margin-bottom: 10px;
+
             address {
                 display: flex;
-                gap: 5px;
                 font-style: normal;
+                font-size: 0.8rem;
+                padding-bottom: 5px;
+                align-items: center;
 
-                span {
+                img {
+                    height: 20px;
+                    width: 20px;
+                    padding-right: 5px;
+                }
+
+                time {
+                    padding-left: 20px;
                     text-decoration: none;
                     color: var(--text-secondary);
                 }
             }
+
+            a {
+                text-decoration: none;
+                color: var(--text-color);
+                font-weight: bold;
+            }
         }
 
-        span {
+        section {
             font-size: 16px;
             letter-spacing: 0.2px;
             font-weight: 400;

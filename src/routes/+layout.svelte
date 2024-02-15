@@ -1,6 +1,19 @@
 <script lang="ts">
+	import { onMount } from "svelte";
+	import { currentHash } from "$lib/data";
+
 	import "normalize.css";
+
+	const hashchange = () => currentHash.set(window.location.hash.slice(1));
+
+	onMount(() => {
+		if (window.location.hash) {
+			hashchange();
+		}
+	});
 </script>
+
+<svelte:window on:hashchange={hashchange} />
 
 <!-- Page content -->
 <slot />
@@ -29,7 +42,7 @@
 			"Open Sans",
 			"Helvetica Neue",
 			sans-serif;
-		
+
 		color: var(--text-color);
 	}
 

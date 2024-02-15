@@ -1,49 +1,44 @@
 <script lang="ts">
-	import type { FeedItem } from "$lib/components/FeedTabList.svelte";
+	import { onMount } from "svelte";
+
+	import { channels, currentChannel } from "$lib/data";
+
 	import FeedTabList from "$lib/components/FeedTabList.svelte";
-
 	import Feed from "$lib/components/Feed.svelte";
-    import Settings from "$lib/components/Settings.svelte";
-
-	const feeds: FeedItem[] = [
-		{
-			id: "all",
-			name: "All",
-		},
-		{
-			id: "developers",
-			name: "Developers",
-		},
-		{
-			id: "github",
-			name: "Github"
-		},
-		{
-			id: "podcasts",
-			name: "Podcasts"
-		},
-		{
-			id: "reddit",
-			name: "Reddit"
-		},
-		{
-			id: "newsletters",
-			name: "Newsletters"
-		},
-		{
-			id: "datajournalism",
-			name: "Datajournalism"
-		}
-	];
+	import Settings from "$lib/components/Settings.svelte";
+	import { connectLocalStorage } from "$lib/localstorage";
+	import Empty from "$lib/components/Empty.svelte";
 
 	const scroll = (ev: Event) => {
 		let el: HTMLElement = ev.target as HTMLElement;
 
-		let feedIndex = Math.round(el.scrollLeft / el.clientWidth);
-		let activeFeed = feeds.at(feedIndex);
+		let pageIndex = Math.round(el.scrollLeft / el.clientWidth);
+		let targetChannel = $channels.at(pageIndex);
 
-		window.location.hash = `#${activeFeed?.id}`;
-	}
+		window.location.hash = `#${targetChannel?.id}`;
+	};
+
+	let feedContainer: HTMLElement;
+
+	onMount(() => {
+		connectLocalStorage(channels, "channels");
+
+		currentChannel.subscribe((value) => {
+			if (!value || !feedContainer) {
+				return;
+			}
+
+			let channelIndex = $channels.indexOf(value);
+			let channelEl: HTMLElement = feedContainer.childNodes[
+				channelIndex
+			] as HTMLElement;
+
+			channelEl.scrollIntoView({
+				behavior: "smooth",
+				inline: "nearest",
+			});
+		});
+	});
 </script>
 
 <svelte:head>
@@ -54,7 +49,7 @@
 <main>
 	<header>
 		<nav>
-			<FeedTabList {feeds} />
+			<FeedTabList />
 		</nav>
 
 		<aside>
@@ -62,12 +57,18 @@
 		</aside>
 	</header>
 
-	<ul dir="ltr" on:scrollend={scroll}>
-	{#each feeds as feed}
-		<li id={feed.id}>
-			<Feed {feed} />
-		</li>
-	{/each}
+	<ul dir="ltr" on:scrollend={scroll} bind:this={feedContainer}>
+		{#if $channels.length > 0}
+			{#each $channels as channel}
+				<li>
+					<Feed {channel} />
+				</li>
+			{/each}
+		{:else}
+			<li>
+				<Empty />
+			</li>
+		{/if}
 	</ul>
 </main>
 
@@ -99,9 +100,9 @@
 		gap: 5px;
 	}
 
-    nav {
-        display: flex;
-        overflow-x: scroll;
+	nav {
+		display: flex;
+		overflow-x: scroll;
 		flex: 1;
 		-ms-overflow-style: none;
 		scrollbar-width: none;
@@ -138,10 +139,16 @@
 
 	ul,
 	header {
-		max-width: 600px;
 		box-sizing: border-box;
 		border-left: 1px solid var(--border-color);
 		border-right: 1px solid var(--border-color);
+	}
+
+	@media screen and (min-width: breakpoints.$tablet) {
+		ul,
+		header {
+			max-width: 600px;
+		}
 	}
 
 	@media screen and (min-width: breakpoints.$desktop) {
@@ -152,7 +159,7 @@
 
 		header {
 			display: contents;
-			
+
 			nav {
 				order: 2;
 			}
@@ -161,7 +168,8 @@
 				order: 0;
 			}
 
-			nav, aside {
+			nav,
+			aside {
 				width: auto;
 				flex: 1;
 				padding-top: 60px;

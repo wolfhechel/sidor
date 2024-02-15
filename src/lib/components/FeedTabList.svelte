@@ -1,42 +1,22 @@
-<script lang="ts" context="module">
-    export type FeedItem = {
-        id: string;
-        name: string;
-    };
-</script>
-
 <script lang="ts">
-    import { onMount } from "svelte";
-
-    import { writable } from "svelte/store";
-
-    export let feeds: FeedItem[];
-
-    export let defaultFeed: string = 'all';
-
-    let activeFeed = writable(defaultFeed);
-
-    const hashchange = () => activeFeed.set(window.location.hash.slice(1));
-
-    onMount(() => {
-        if (window.location.hash) {
-            hashchange();
-        }
-    })
+    import { currentChannel, channels } from "$lib/data";
 </script>
-
-<svelte:window on:hashchange={hashchange} />
 
 <ul>
-    {#each feeds as feed}
+    {#each $channels as channel}
         <li>
-            <a href={`#${feed.id}`} aria-current={$activeFeed == feed.id ? 'page' : undefined}>{feed.name}</a>
+            <a
+                href={`#${channel.id}`}
+                aria-current={$currentChannel?.id == channel.id
+                    ? "page"
+                    : undefined}>{channel.label}</a
+            >
         </li>
     {/each}
 </ul>
 
 <style lang="scss">
-	@use "$lib/breakpoints";
+    @use "$lib/breakpoints";
 
     ul {
         margin: 0;
@@ -59,7 +39,7 @@
                 border-bottom: 2px solid transparent;
                 letter-spacing: 0.25px;
                 font-weight: 700;
-                text-align:center;
+                text-align: center;
 
                 &:hover {
                     background-color: var(--button-hover-color);
@@ -71,7 +51,7 @@
             }
         }
     }
-    
+
     @media screen and (min-width: breakpoints.$desktop) {
         ul {
             flex-direction: column;
