@@ -3,7 +3,6 @@
 <style lang="scss">
     div {
         font-weight: bold;
-        width: 600px;
         height: 100%;
         display: flex;
         align-items: center;

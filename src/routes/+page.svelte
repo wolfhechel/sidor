@@ -33,10 +33,12 @@
 				channelIndex
 			] as HTMLElement;
 
-			channelEl.scrollIntoView({
-				behavior: "smooth",
-				inline: "nearest",
-			});
+			if (channelEl) {
+				channelEl.scrollIntoView({
+					behavior: "smooth",
+					inline: "nearest",
+				});
+			}
 		});
 	});
 </script>
@@ -80,8 +82,8 @@
 		margin: 0 auto;
 		display: flex;
 		flex-direction: column;
-		width: fit-content;
-		max-width: 100%;
+		width: 100%;
+		max-width: 600px;
 
 		-ms-overflow-style: none;
 		scrollbar-width: none;
@@ -126,10 +128,12 @@
 		li {
 			list-style-type: none;
 			flex: none;
-			max-width: 100%;
+			// max-width: 100%;
+			width: 100%;
 			scroll-snap-align: start;
 			scroll-snap-stop: always;
 			overflow-y: scroll;
+			overflow-x: clip;
 		}
 	}
 
@@ -149,12 +153,14 @@
 		header {
 			max-width: 600px;
 		}
+
 	}
 
 	@media screen and (min-width: breakpoints.$desktop) {
 		main {
 			flex-direction: row;
 			width: 100%;
+			max-width: unset;
 		}
 
 		header {

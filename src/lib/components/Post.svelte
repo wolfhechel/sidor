@@ -4,15 +4,32 @@
 
     export let post: Item;
 
-    const getAvatar = (post: Item): string => {
-        let avatar: string;
+    const getAvatar = (post: Item): string | null => {
+        let avatar: string | null;
 
         if (post.author.avatar) {
             avatar = post.author.avatar;
         } else {
-            let domain = new URL(post.author.url).hostname;
-            let size = 128;
-            avatar = `https://www.google.com/s2/favicons?domain=${domain}&sz=${size}`;
+            let url: string | null = null;
+
+            if (post.author.url) {
+                url = post.author.url;
+            } else if (post.url) {
+                url = post.url;
+            }
+
+            if (url) {
+                try {
+                    let domain = new URL(url).hostname;
+                    let size = 128;
+                    avatar = `https://www.google.com/s2/favicons?domain=${domain}&sz=${size}`;
+                } catch (err) {
+                    console.log(err, url);
+                    avatar = null;
+                }
+            } else {
+                avatar = null;
+            }
         }
 
         return avatar;
@@ -22,7 +39,7 @@
 <article>
     <header>
         <address>
-            <img src={getAvatar(post)} /><b>{post.author.name}</b><time
+            <img alt="Avatar of post" src={getAvatar(post)} /><b>{post.author.name}</b><time
                 use:svelteTime={{
                     relative: true,
                     timestamp: post.date_published,
