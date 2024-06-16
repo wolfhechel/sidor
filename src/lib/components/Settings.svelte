@@ -1,6 +1,5 @@
 <script lang="ts">
     import type { ComponentType } from "svelte";
-    import ManageFeeds from "./ManageFeeds.svelte";
     import Dialog from "./Dialog.svelte";
 
     let checked = false;
@@ -11,12 +10,7 @@
         component: ComponentType;
     }
 
-    let options: Option[] = [
-        {
-            label: "Manage channels",
-            component: ManageFeeds,
-        },
-    ];
+    let options: Option[] = [];
 
     const onClick = (index: number) => {
         let option: Option = options[index];

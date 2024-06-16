@@ -15,9 +15,11 @@
 <dialog use:showModal>
     <form>
         <h3>{label}</h3>
-        <button formmethod="dialog">Close</button>
+        <button formmethod="dialog">&#x2715;</button>
     </form>
-    <slot />
+    <section>
+        <slot />
+    </section>
 </dialog>
 
 <style lang="scss">
@@ -28,12 +30,18 @@
     dialog {
         max-width: 500px;
         width: 80vw;
-        height: 80vh;
+        height: fit-content;
+        max-height: 80vh;
+        box-shadow: 0px 1px 5px 1px rgba(0, 0, 0, 0.5);
+        border: none;
+        padding: 0;
 
         form {
             display: flex;
             justify-content: space-between;
-            padding: 1em 0;
+            padding: 1em;
+            background-color: #eceff4;
+            color: #2e3440;
 
             h3 {
                 margin: 0;
@@ -42,8 +50,16 @@
             button {
                 background-color: transparent;
                 border-radius: 0;
-                border: 1px solid var(--text-color);
+                border: none;
+                background-color: #d8dee9;
+                padding: 2px 6px;
+                border-radius: 2px;
+                cursor: pointer;
             }
+        }
+
+        section {
+            padding: 10px 16px;
         }
     }
 </style>

@@ -1,52 +1,58 @@
 <script lang="ts">
-	import type { Channel } from "$lib/data";
-	import { onMount } from "svelte";
+	import { writable, type Writable } from "svelte/store";
+	import { type Category, type Entry, type Pagination } from "$lib/api";
+
 	import Post from "./Post.svelte";
-	import { get, type Item } from "$lib/granary";
-	import {
-		writable,
-		type Readable,
-		type Writable,
-		derived,
-	} from "svelte/store";
+	import Loader from "./Loader.svelte";
+	import { client } from "$lib/store";
 
-	export let channel: Channel;
+	export let category: Category;
 
-	let data: Writable<Item[]> = writable([]);
+	$: limit = 10;
+	$: offset = 0;
+	$: total = Infinity;
 
-	let sortedFeed: Readable<Item[]> = derived([data], ([$data]) => {
-		return $data.sort(
-			(a, b) =>
-				Date.parse(b.date_published) - Date.parse(a.date_published),
-		);
-	});
+	let entries: Writable<Entry[]> = writable([]);
 
-	onMount(() => {
-		channel.feeds.forEach((feed) => {
-			get(feed.url).then((feed) => {
-				$data.push(...feed.items);
+	$: loadMore = $entries.length < total;
 
-				$data = $data;
+	const load = () => {
+		$client
+			.get<Pagination<Entry>>(`categories/${category.id}/entries`, {
+				direction: "desc",
+				limit: limit.toString(),
+				offset: offset.toString(),
+				status: "unread",
+			})
+			.then((value) => {
+				if (total == Infinity) {
+					total = value.total;
+				}
+
+				offset += limit;
+
+				$entries = $entries.concat(value.entries);
 			});
-		});
-	});
+	};
 </script>
 
-<h1>{channel.label}</h1>
+<h1>{category.title}</h1>
 
-{#each $sortedFeed as post}
-	<Post {post} />
+{#each $entries as entry}
+	<Post {entry} />
 {/each}
+
+{#if loadMore}
+	<Loader on:loaded={load} />
+{/if}
 
 <style lang="scss">
 	@use "$lib/breakpoints";
 
 	h1 {
 		display: none;
-	}
 
-	@media screen and (min-width: breakpoints.$desktop) {
-		h1 {
+		@media screen and (min-width: breakpoints.$desktop) {
 			display: block;
 			margin: 0;
 			padding: 15px;
@@ -54,6 +60,7 @@
 			margin: 0;
 			top: 0;
 			position: sticky;
+			z-index: 1;
 			background-color: var(--background-color);
 			font-size: 1.5em;
 			height: 60px;

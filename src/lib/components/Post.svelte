@@ -1,59 +1,51 @@
 <script lang="ts">
-    import type { Item } from "$lib/granary";
+    import type { Entry } from "$lib/api";
     import { svelteTime } from "svelte-time";
 
-    export let post: Item;
+    export let entry: Entry;
 
-    const getAvatar = (post: Item): string | null => {
+    const getAvatar = (post: Entry): string | null => {
         let avatar: string | null;
 
-        if (post.author.avatar) {
-            avatar = post.author.avatar;
-        } else {
-            let url: string | null = null;
-
-            if (post.author.url) {
-                url = post.author.url;
-            } else if (post.url) {
-                url = post.url;
-            }
-
-            if (url) {
-                try {
-                    let domain = new URL(url).hostname;
-                    let size = 128;
-                    avatar = `https://www.google.com/s2/favicons?domain=${domain}&sz=${size}`;
-                } catch (err) {
-                    console.log(err, url);
-                    avatar = null;
-                }
-            } else {
-                avatar = null;
-            }
+        try {
+            let domain = new URL(post.url).hostname;
+            let size = 128;
+            avatar = `https://www.google.com/s2/favicons?domain=${domain}&sz=${size}`;
+        } catch (err) {
+            avatar = null;
         }
 
         return avatar;
     };
+
+    const sanitize = (content: string) => {
+        return content;
+    };
+
+    let contentHeight: number;
 </script>
 
 <article>
     <header>
         <address>
-            <img alt="Avatar of post" src={getAvatar(post)} /><b>{post.author.name}</b><time
+            <img alt="Avatar of post" src={getAvatar(entry)} /><b
+                >{entry.feed.title}
+                {#if entry.author}({entry.author}){/if}</b
+            ><time
                 use:svelteTime={{
                     relative: true,
-                    timestamp: post.date_published,
+                    timestamp: entry.published_at,
                 }}
             />
         </address>
 
-        {#if post.title}
-            <a target="_blank" href={post.url}>{post.title}</a>
+        {#if entry.title}
+            <a target="_blank" href={entry.url}>{entry.title}</a>
         {/if}
     </header>
 
-    <section>
-        {@html post.content_html}
+    <section bind:clientHeight={contentHeight}>
+        {@html sanitize(entry.content)}
     </section>
 </article>
 
@@ -62,7 +54,9 @@
         display: flex;
         flex-direction: column;
         padding: 10px 15px;
-        border-bottom: 1px solid var(--border-color);
+        margin-bottom: 10px;
+        box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.3);
+        background-color: var(--background-color);
 
         header {
             margin-bottom: 10px;
@@ -100,6 +94,16 @@
             font-weight: 400;
             color: rgb(0, 0, 0);
             line-height: 20.8px;
+
+            :global(iframe) {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 16 / 9;
+            }
+
+            :global(img) {
+                max-width: 100%;
+            }
         }
     }
 </style>

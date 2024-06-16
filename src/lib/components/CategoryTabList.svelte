@@ -1,15 +1,15 @@
 <script lang="ts">
-    import { currentChannel, channels } from "$lib/data";
+    import { currentCategory, categories } from "$lib/store";
 </script>
 
 <ul>
-    {#each $channels as channel}
+    {#each $categories as category}
         <li>
             <a
-                href={`#${channel.id}`}
-                aria-current={$currentChannel?.id == channel.id
+                href={`#${category.id}`}
+                aria-current={$currentCategory?.id == category.id
                     ? "page"
-                    : undefined}>{channel.label}</a
+                    : undefined}>{category.title}</a
             >
         </li>
     {/each}
@@ -21,9 +21,7 @@
     ul {
         margin: 0;
         padding: 0;
-        padding-left: 5px;
         display: inline-flex;
-        gap: 5px;
         flex: 1;
 
         li {
