@@ -55,7 +55,7 @@
 		--button-hover-color: rgb(243, 243, 248);
 		--text-secondary: rgb(84, 86, 100);
 		--background-color: #fff;
-		--text-color: #000;
+		--text-color: #313131;
 
 		font-family:
 			system-ui,

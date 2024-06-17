@@ -57,7 +57,7 @@ export class Client {
         }
     }
 
-    async get<T>(path: string, params?: { [key: string]: string} ): Promise<T> {
+    async get<T>(path: string, params?: { [key: string]: string | string[]} ): Promise<T> {
         if (!this.isAuthenticated) {
             return Promise.reject(new Error("client not authenticated"));
         }
@@ -65,7 +65,19 @@ export class Client {
         let query: string = '';
 
         if (params) {
-            query = `?` + (new URLSearchParams(params));
+            let urlsearch = new URLSearchParams();
+
+            Object.entries(params).forEach(([key, value]) => {
+                if (Array.isArray(value)) {
+                    value.forEach((value) => {
+                        urlsearch.append(key, value);
+                    })
+                } else {
+                    urlsearch.append(key, value);
+                }
+            })
+
+            query = `?` + urlsearch;
         }
 
         return fetch(`${this.host}/v1/${path}` + query, {

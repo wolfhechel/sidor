@@ -22,7 +22,7 @@
 				direction: "desc",
 				limit: limit.toString(),
 				offset: offset.toString(),
-				status: "unread",
+				status: ["unread", "read"],
 			})
 			.then((value) => {
 				if (total == Infinity) {

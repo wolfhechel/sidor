@@ -29,7 +29,7 @@
             flex: 1;
 
             a {
-                color: black;
+                color: var(--text-color);
                 text-decoration: none;
                 display: block;
                 padding: 12px;
