@@ -62,7 +62,7 @@
 
     section {
         align-self: center;
-        width: 400px;
+        max-width: 400px;
     }
 
     span.error {
