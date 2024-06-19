@@ -23,7 +23,7 @@
 		height: 100%;
 		margin: 0 auto;
 		display: flex;
-		flex-direction: column;
+		flex-direction: column-reverse;
 		width: 100%;
 		justify-content: center;
 
