@@ -33,8 +33,10 @@ export interface Entry {
     content: string;
     published_at: string;
     created_at: string;
+    changed_at: string;
     status: string;
     feed: Feed;
+    starred: boolean;
 }
 
 export interface Pagination<T> {

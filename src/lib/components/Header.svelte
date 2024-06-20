@@ -21,7 +21,7 @@
         top: 0;
         background-color: white;
         height: 45px;
-        border-bottom: 1px solid var(--border-color);
+        border-top: 1px solid var(--border-color);
         display: flex;
         gap: 5px;
 

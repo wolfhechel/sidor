@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from "svelte";
-	import { currentHash, profile, client } from "$lib/store";
+	import { currentHash, profile, client, pageVisibile } from "$lib/store";
 	import { connectLocalStorage } from "$lib/localstorage";
 
 	import Connect from "$lib/layouts/Connect.svelte";
@@ -15,6 +15,10 @@
 		}
 
 		connectLocalStorage(profile, "profile");
+
+		document.addEventListener("visibilitychange", () => {
+			pageVisibile.set(!document.hidden);
+		});
 	});
 </script>
 

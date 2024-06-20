@@ -4,17 +4,36 @@
 
 	import Post from "./Post.svelte";
 	import Loader from "./Loader.svelte";
-	import { client } from "$lib/store";
+	import { client, pageVisibile } from "$lib/store";
 
 	export let category: Category;
 
-	$: limit = 10;
+	let latestLoad: number;
+
+	let limit = 10;
+
 	$: offset = 0;
 	$: total = Infinity;
 
 	let entries: Writable<Entry[]> = writable([]);
 
+	const reloadAfter = 5 * 60 * 1000;
+
 	$: loadMore = $entries.length < total;
+
+	const resetFeed = () => {
+		total = Infinity;
+		offset = 0;
+		$entries = [];
+	};
+
+	const needRefresh = () => {
+		if (latestLoad + reloadAfter < Date.now()) {
+			resetFeed();
+		}
+	};
+
+	$: $pageVisibile && needRefresh();
 
 	const load = () => {
 		$client
@@ -31,16 +50,22 @@
 
 				offset += limit;
 
-				$entries = $entries.concat(value.entries);
+				$entries = $entries.concat(value.entries).sort((a, b) => {
+					return Date.parse(b.changed_at) - Date.parse(a.changed_at);
+				});
+
+				latestLoad = Date.now();
 			});
 	};
 </script>
 
 <h1>{category.title}</h1>
 
-{#each $entries as entry}
-	<Post {entry} />
-{/each}
+<section>
+	{#each $entries as entry}
+		<Post {entry} />
+	{/each}
+</section>
 
 {#if loadMore}
 	<Loader on:loaded={load} />
@@ -66,5 +91,11 @@
 			height: 60px;
 			box-sizing: border-box;
 		}
+	}
+
+	section {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
 	}
 </style>

@@ -17,21 +17,15 @@
 
         return avatar;
     };
-
-    const sanitize = (content: string) => {
-        return content;
-    };
-
-    let expanded: boolean = false;
 </script>
 
-<article class:read={entry.status == 'read'}>
+<article class:read={entry.status == "read"}>
     <header>
         <address>
             <img alt="Avatar of post" src={getAvatar(entry)} /><b
-                >{entry.feed.title}
-                {#if entry.author}({entry.author}){/if}</b
-            ><time
+                >{entry.feed.title}</b
+            >
+            <time
                 use:svelteTime={{
                     relative: true,
                     timestamp: entry.published_at,
@@ -44,10 +38,8 @@
         {/if}
     </header>
 
-    <section class:expanded>
-        {@html sanitize(entry.content)}
-
-        <button class="expand" on:click={() => expanded = true}>Expand</button>
+    <section>
+        {@html entry.content}
     </section>
 </article>
 
@@ -56,8 +48,7 @@
         display: flex;
         flex-direction: column;
         padding: 10px 15px;
-        margin-bottom: 10px;
-        box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.3);
+        box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.4);
         background-color: var(--background-color);
         color: var(--text-color);
 
@@ -72,7 +63,7 @@
                 display: flex;
                 font-style: normal;
                 font-size: 0.8rem;
-                padding-bottom: 5px;
+                padding-bottom: 16px;
                 align-items: center;
 
                 img {
@@ -100,28 +91,7 @@
             letter-spacing: 0.2px;
             font-weight: 400;
             line-height: 1.4;
-            max-height: 400px;
-            overflow-y: hidden;
             position: relative;
-
-            &.expanded {
-                max-height: fit-content;
-
-                button.expand {
-                    display: none;
-                }
-            }
-
-            button.expand {
-                position: absolute;
-                top: 364px;
-                width: 100%;
-                background-color: var(--background-color);
-                border: 0;
-                padding: 10px;
-                font-size: 16px;
-                cursor: pointer;
-            }
 
             :global(table) {
                 border-spacing: 0;

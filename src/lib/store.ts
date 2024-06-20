@@ -24,3 +24,5 @@ export const currentCategory: Readable<Category | undefined>  = derived(
     ([$currentHash, $categories]) => {
         return $categories.find((value) => value.id.toString() == $currentHash) || $categories.at(0);
 });
+
+export const pageVisibile: Writable<boolean> = writable(true);
