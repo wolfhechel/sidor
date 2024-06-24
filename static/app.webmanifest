@@ -7,7 +7,7 @@
     "start_url": "/sidor",
     "theme_color": "#f65e1c",
     "background_color": "#ffffff",
-    "display": "fullscreen",
+    "display": "standalone",
     "icons": [
         {
             "src": "images/maskable_icon_x192.png",
