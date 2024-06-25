@@ -1,15 +1,23 @@
+<script lang="ts" context="module">
+    export interface Tab {
+        title: string;
+        id: number;
+    }
+</script>
+
 <script lang="ts">
-    import { currentCategory, categories } from "$lib/store";
+    export let tabs: Tab[];
+    export let currentTab: number;
 </script>
 
 <ul>
-    {#each $categories as category}
+    {#each tabs as tab}
         <li>
             <a
-                href={`#${category.id}`}
-                aria-current={$currentCategory?.id == category.id
+                href={`#${tab.id}-0`}
+                aria-current={currentTab == tab.id
                     ? "page"
-                    : undefined}>{category.title}</a
+                    : undefined}>{tab.title}</a
             >
         </li>
     {/each}

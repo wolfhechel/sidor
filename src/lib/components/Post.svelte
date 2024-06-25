@@ -30,7 +30,7 @@
                     relative: true,
                     timestamp: entry.published_at,
                 }}
-            />
+            ></time>
         </address>
 
         {#if entry.title}
@@ -47,7 +47,6 @@
     article {
         display: flex;
         flex-direction: column;
-        padding: 10px 15px;
         box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.4);
         background-color: var(--background-color);
         color: var(--text-color);
@@ -57,13 +56,18 @@
         }
 
         header {
-            margin-bottom: 10px;
+            position: sticky;
+            top: 0;
+            padding: 10px 15px;
+            background-color: var(--background-color);
+            z-index: 2;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
             address {
                 display: flex;
                 font-style: normal;
                 font-size: 0.8rem;
-                padding-bottom: 16px;
+                padding-bottom: 10px;
                 align-items: center;
 
                 img {
@@ -92,6 +96,7 @@
             font-weight: 400;
             line-height: 1.4;
             position: relative;
+            padding: 10px 15px;
 
             :global(table) {
                 border-spacing: 0;

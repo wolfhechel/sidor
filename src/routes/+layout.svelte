@@ -1,28 +1,17 @@
 <script lang="ts">
 	import { onMount } from "svelte";
-	import { currentHash, profile, client, pageVisibile } from "$lib/store";
+	import { profile, client } from "$lib/store";
 	import { connectLocalStorage } from "$lib/localstorage";
 
 	import Connect from "$lib/layouts/Connect.svelte";
 
 	import "normalize.css";
 
-	const hashchange = () => currentHash.set(window.location.hash.slice(1));
-
 	onMount(() => {
-		if (window.location.hash) {
-			hashchange();
-		}
 
 		connectLocalStorage(profile, "profile");
-
-		document.addEventListener("visibilitychange", () => {
-			pageVisibile.set(!document.hidden);
-		});
 	});
 </script>
-
-<svelte:window on:hashchange={hashchange} />
 
 {#if $client.isAuthenticated}
 	<slot />

@@ -1,6 +1,5 @@
 <script lang="ts">
     import type { ComponentType } from "svelte";
-    import Dialog from "./Dialog.svelte";
 
     let checked = false;
     let selectedOption: Option | undefined;
@@ -23,9 +22,9 @@
 <div>
     <input bind:checked type="checkbox" id="toggle-settings-page" />
     <label id="settings-container" for="toggle-settings-page">
-        <span />
-        <span />
-        <span />
+        <span></span>
+        <span></span>
+        <span></span>
     </label>
     <ul>
         {#each options as option, i}
@@ -35,14 +34,6 @@
         {/each}
     </ul>
 </div>
-
-{#if selectedOption}
-    <Dialog
-        label={selectedOption.label}
-        on:close={() => (selectedOption = undefined)}
-        ><svelte:component this={selectedOption.component} /></Dialog
-    >
-{/if}
 
 <style lang="scss">
     @use "$lib/breakpoints";
