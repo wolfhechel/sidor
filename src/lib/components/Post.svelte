@@ -25,12 +25,6 @@
             <img alt="Avatar of post" src={getAvatar(entry)} /><b
                 >{entry.feed.title}</b
             >
-            <time
-                use:svelteTime={{
-                    relative: true,
-                    timestamp: entry.published_at,
-                }}
-            ></time>
         </address>
 
         {#if entry.title}
