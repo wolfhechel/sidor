@@ -12,12 +12,11 @@
 
 <ul>
     {#each tabs as tab}
+        {@const isCurrent = currentTab == tab.id}
         <li>
             <a
-                href={`#${tab.id}-0`}
-                aria-current={currentTab == tab.id
-                    ? "page"
-                    : undefined}>{tab.title}</a
+                href={isCurrent ? `#${tab.id}-0` : `#${tab.id}`}
+                aria-current={isCurrent ? "page" : undefined}>{tab.title}</a
             >
         </li>
     {/each}

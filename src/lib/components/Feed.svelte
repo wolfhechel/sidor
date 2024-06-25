@@ -70,7 +70,7 @@
 	};
 </script>
 
-<section>
+<section id={`${category.id}`}>
 	{#each $groupedEntries as { key, entries }}
 	<time>{key}</time>
 	{#each entries as entry}
