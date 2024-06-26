@@ -1,25 +1,34 @@
 <script lang="ts" context="module">
-    import type { ComponentType } from 'svelte';
+    import type { ComponentType } from "svelte";
 
     export interface Page {
         component: ComponentType;
         id: number;
-        properties: Record<string, any>
+        properties: Record<string, any>;
     }
 </script>
 
 <script lang="ts">
+    import { createEventDispatcher } from "svelte";
+
     export let pages: Page[] = [];
     export let currentPage: number;
 
     let el: HTMLElement;
+
+    const dispatch = createEventDispatcher();
 
     const scroll = (ev: Event) => {
         let el: HTMLElement = ev.target as HTMLElement;
 
         let pageIndex = Math.round(el.scrollLeft / el.clientWidth);
 
-        currentPage = pages.at(pageIndex)!.id;
+        let newCurrentPage = pages.at(pageIndex)!.id;
+
+        if (currentPage != newCurrentPage) {
+            currentPage = newCurrentPage;
+            dispatch("pageChanged", currentPage);
+        }
     };
 
     const scrollToIfActive = (el: HTMLElement, pageId: number) => {
@@ -29,14 +38,14 @@
                 inline: "nearest",
             });
         }
-    }
+    };
 </script>
 
 <ul dir="ltr" on:scrollend={scroll} bind:this={el}>
     {#each pages as page}
-    <li use:scrollToIfActive={page.id}>
-        <svelte:component this={page.component} {...page.properties}/>
-    </li>
+        <li use:scrollToIfActive={page.id}>
+            <svelte:component this={page.component} {...page.properties} />
+        </li>
     {/each}
 </ul>
 

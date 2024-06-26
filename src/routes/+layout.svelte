@@ -1,23 +1,8 @@
 <script lang="ts">
-	import { onMount } from "svelte";
-	import { profile, client } from "$lib/store";
-	import { connectLocalStorage } from "$lib/localstorage";
-
-	import Connect from "$lib/layouts/Connect.svelte";
-
 	import "normalize.css";
-
-	onMount(() => {
-
-		connectLocalStorage(profile, "profile");
-	});
 </script>
 
-{#if $client.isAuthenticated}
-	<slot />
-{:else}
-	<Connect />
-{/if}
+<slot />
 
 <style lang="scss">
 	@use "$lib/breakpoints";
