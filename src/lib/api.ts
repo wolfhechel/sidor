@@ -96,4 +96,33 @@ export class Client {
             }
         })
     }
+
+    async put<T>(path: string, data: any ): Promise<T> {
+        if (!this.isAuthenticated) {
+            return Promise.reject(new Error("client not authenticated"));
+        }
+
+        return fetch(`${this.host}/v1/${path}`, {
+            headers: {
+                'X-Auth-Token': this.token!,
+                'Content-Type': 'application/json'
+            },
+            method: 'PUT',
+            body: JSON.stringify(data)
+        }).then(
+            (response) => {
+                if (response.status == 204) {
+                    return '';
+                } else {
+                    return response.json()
+                }
+            }
+        ).then((data) => {
+            if (Object.hasOwn(data, "error_message")) {
+                throw Error(data.error_message);
+            } else {
+                return data;
+            }
+        })
+    }
 }

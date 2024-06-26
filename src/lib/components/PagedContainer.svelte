@@ -9,8 +9,6 @@
 </script>
 
 <script lang="ts">
-    import { onMount } from 'svelte';
-
     export let pages: Page[] = [];
     export let currentPage: number;
 

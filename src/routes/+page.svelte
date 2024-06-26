@@ -10,7 +10,7 @@
     import TabList, { type Tab } from "$lib/components/TabList.svelte";
     import ContextMenu from "$lib/components/ContextMenu.svelte";
 
-	const reloadAfter = 5 * 60 * 1000;
+	const reloadAfter = 10 * 60 * 1000;
 	let latestLoad: number;
 
 	const categories: Writable<Category[]> = writable([]);

@@ -1,6 +1,6 @@
 <script lang="ts">
+    import { createEventDispatcher } from "svelte";
     import type { Entry } from "$lib/api";
-    import { svelteTime } from "svelte-time";
 
     export let entry: Entry;
 
@@ -16,6 +16,20 @@
         }
 
         return avatar;
+    };
+
+    const dispatch = createEventDispatcher();
+
+    $: isRead = entry.status == "read";
+
+    const toggleStatus = (e) => {
+        e.target.checked = isRead;
+        e.target.indeterminate = false;
+
+        dispatch("setStatus", {
+            entry_id: entry.id,
+            status: isRead ? "unread" : "read",
+        });
     };
 </script>
 
@@ -35,6 +49,14 @@
     <section>
         {@html entry.content}
     </section>
+
+    <footer>
+        <small>Read </small><input
+            type="checkbox"
+            bind:checked={isRead}
+            on:change={toggleStatus}
+        />
+    </footer>
 </article>
 
 <style lang="scss">
@@ -44,6 +66,9 @@
         box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.4);
         background-color: var(--background-color);
         color: var(--text-color);
+        transition: opacity 0.25s ease-in-out;
+        -moz-transition: opacity 0.25s ease-in-out;
+        -webkit-transition: opacity 0.25s ease-in-out;
 
         &.read {
             opacity: 0.4;
@@ -53,6 +78,7 @@
             position: sticky;
             top: 0;
             padding: 10px 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             background-color: var(--background-color);
             z-index: 2;
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -68,12 +94,6 @@
                     height: 20px;
                     width: 20px;
                     padding-right: 5px;
-                }
-
-                time {
-                    padding-left: 20px;
-                    text-decoration: none;
-                    color: var(--text-secondary);
                 }
             }
 
@@ -113,6 +133,15 @@
             :global(img) {
                 max-width: 100%;
             }
+        }
+
+        footer {
+            padding: 10px 15px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 5px;
         }
     }
 </style>
