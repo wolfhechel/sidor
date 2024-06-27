@@ -132,6 +132,21 @@
 
             :global(img) {
                 max-width: 100%;
+                border-radius: 10px;
+            }
+
+            :global(video) {
+                max-width: 100%;
+            }
+
+            :global(figure) {
+                margin-block: 20px;
+                margin-inline: 0;
+            }
+
+            :global(figcaption) {
+                text-align: center;
+                font-size: 0.8rem;
             }
         }
 
