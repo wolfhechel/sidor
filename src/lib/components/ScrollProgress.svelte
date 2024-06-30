@@ -1,11 +1,13 @@
 <script lang="ts">
-    import { onDestroy, onMount } from "svelte";
+    import { onDestroy, onMount, createEventDispatcher } from "svelte";
 
     export let contentElement: HTMLElement;
     export let scrollParent: HTMLElement;
     export let marginBottom: number;
 
     $: progress = 0;
+
+    const dispatch = createEventDispatcher();
 
     const onScroll = (ev: Event) => {
         let scrollTop = (ev.target as HTMLElement).scrollTop;
@@ -15,6 +17,10 @@
         let top = Math.max(0, scrollTop - offsetTop); // Amount of scroll on entry
 
         progress = Math.min(top / (clientHeight - marginBottom), 1) * 100;
+
+        if (progress == 100) {
+            dispatch("completed");
+        }
     };
 
     onMount(() => {

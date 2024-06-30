@@ -64,6 +64,13 @@
     let scrollMarginTop: number;
 
     $: scrollMargin = scrollMarginBottom + scrollMarginTop;
+
+    const completed = () => {
+        dispatch("setStatus", {
+            entry_id: entry.id,
+            status: "read",
+        });
+    };
 </script>
 
 <article
@@ -86,6 +93,7 @@
             {contentElement}
             {scrollParent}
             bind:marginBottom={scrollMargin}
+            on:completed={completed}
         />
     </header>
 
