@@ -32,8 +32,9 @@
 		--content-size: 600px;
 		--button-hover-color: rgb(243, 243, 248);
 		--text-secondary: rgb(84, 86, 100);
-		--background-color: #fff;
+		--background-color: #fffafa;
 		--text-color: #313131;
+		--secondary-text-color: #536471;
 
 		font-family:
 			system-ui,
@@ -53,5 +54,7 @@
 
 	:global(html, body) {
 		height: 100%;
+		background-color: var(--background-color);
+		font-size: 16px;
 	}
 </style>

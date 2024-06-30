@@ -1,28 +1,11 @@
 <script lang="ts">
-    import { createEventDispatcher, onDestroy, onMount } from "svelte";
-
-    let el: HTMLElement;
+    import { inView } from "$lib/inview";
+    import { createEventDispatcher } from "svelte";
 
     let dispatch = createEventDispatcher();
-
-    let observer: IntersectionObserver = new IntersectionObserver(
-        (entries: IntersectionObserverEntry[]) => {
-            if (entries[0].isIntersecting) {
-                dispatch("loaded");
-            }
-        },
-    );
-
-    onMount(() => {
-        observer.observe(el);
-    });
-
-    onDestroy(() => {
-        observer.disconnect();
-    });
 </script>
 
-<div bind:this={el}>Loading</div>
+<div use:inView on:enter={() => dispatch("loaded")}>Loading</div>
 
 <style lang="scss">
     div {

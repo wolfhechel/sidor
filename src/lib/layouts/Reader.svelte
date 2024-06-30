@@ -61,7 +61,6 @@
 
 	const pageChanged = (e: CustomEvent<number>) => {
 		window.location.hash = `#${e.detail}`;
-		console.log(e.detail);
 	};
 </script>
 

@@ -1,28 +1,27 @@
+<script lang="ts" context="module">
+</script>
+
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
     import type { Entry } from "$lib/api";
+    import { domain } from "$lib/utils";
+
+    import Favicon from "./Favicon.svelte";
+    import LinkPreview from "./LinkPreview.svelte";
+    import ViewportVisible from "./ViewportVisible.svelte";
+    import RenderHtml from "./RenderHtml.svelte";
 
     export let entry: Entry;
-
-    const getAvatar = (post: Entry): string | null => {
-        let avatar: string | null;
-
-        try {
-            let domain = new URL(post.url).hostname;
-            let size = 128;
-            avatar = `https://www.google.com/s2/favicons?domain=${domain}&sz=${size}`;
-        } catch (err) {
-            avatar = null;
-        }
-
-        return avatar;
-    };
 
     const dispatch = createEventDispatcher();
 
     $: isRead = entry.status == "read";
 
-    const toggleStatus = (e) => {
+    $: audio = entry.enclosures.find((enclosure) =>
+        enclosure.mime_type.startsWith("audio"),
+    );
+
+    const toggleStatus = (e: Event & { target: HTMLInputElement }) => {
         e.target.checked = isRead;
         e.target.indeterminate = false;
 
@@ -31,14 +30,36 @@
             status: isRead ? "unread" : "read",
         });
     };
+
+    const findExternalLink = (content: string): string | null => {
+        const parser: DOMParser = new DOMParser();
+
+        let document = parser.parseFromString(content, "text/html");
+
+        let rawLinks = Array.from(document.querySelectorAll("a")).filter(
+            (element) => {
+                return element.href == element.innerText;
+            },
+        );
+
+        if (!rawLinks) {
+            return null;
+        }
+
+        if (rawLinks.length > 1) {
+            return null;
+        }
+
+        return rawLinks.at(0)?.href || null;
+    };
+
+    $: externalLink = findExternalLink(entry.content);
 </script>
 
 <article class:read={entry.status == "read"}>
     <header>
         <address>
-            <img alt="Avatar of post" src={getAvatar(entry)} /><b
-                >{entry.feed.title}</b
-            >
+            <Favicon url={entry.url} size="20" /><b>{entry.feed.title}</b>
         </address>
 
         {#if entry.title}
@@ -47,7 +68,22 @@
     </header>
 
     <section>
-        {@html entry.content}
+        {#if audio}
+            <audio controls>
+                <source src={audio.url} type={audio.mime_type} />
+                Your browser does not support the audio element.
+            </audio>
+        {:else if domain(entry.feed.feed_url) != domain(entry.url)}
+            <ViewportVisible>
+                <LinkPreview url={entry.url} />
+            </ViewportVisible>
+        {:else if externalLink}
+            <ViewportVisible>
+                <LinkPreview url={externalLink} />
+            </ViewportVisible>
+        {/if}
+
+        <RenderHtml html={entry.content} />
     </section>
 
     <footer>
@@ -70,6 +106,10 @@
         -moz-transition: opacity 0.25s ease-in-out;
         -webkit-transition: opacity 0.25s ease-in-out;
 
+        audio {
+            width: 100%;
+        }
+
         &.read {
             opacity: 0.4;
         }
@@ -89,12 +129,7 @@
                 font-size: 0.8rem;
                 padding-bottom: 10px;
                 align-items: center;
-
-                img {
-                    height: 20px;
-                    width: 20px;
-                    padding-right: 5px;
-                }
+                gap: 5px;
             }
 
             a {
@@ -111,43 +146,9 @@
             line-height: 1.4;
             position: relative;
             padding: 10px 15px;
-
-            :global(table) {
-                border-spacing: 0;
-            }
-
-            :global(h1) {
-                line-height: 1.25;
-            }
-
-            :global(h3) {
-                line-height: 1.3;
-            }
-
-            :global(iframe) {
-                width: 100%;
-                height: auto;
-                aspect-ratio: 16 / 9;
-            }
-
-            :global(img) {
-                max-width: 100%;
-                border-radius: 10px;
-            }
-
-            :global(video) {
-                max-width: 100%;
-            }
-
-            :global(figure) {
-                margin-block: 20px;
-                margin-inline: 0;
-            }
-
-            :global(figcaption) {
-                text-align: center;
-                font-size: 0.8rem;
-            }
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         footer {

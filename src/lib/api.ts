@@ -15,11 +15,19 @@ export interface Category {
     user_id: number;
 }
 
+export interface Enclosure {
+    id: number;
+    url: string;
+    mime_type: string;
+    media_progression: number;
+}
+
 export interface Feed {
     id: number;
     user_id: number;
     title: string;
     category: Category;
+    feed_url: string;
 }
 
 export interface Entry {
@@ -37,6 +45,7 @@ export interface Entry {
     status: string;
     feed: Feed;
     starred: boolean;
+    enclosures: Enclosure[];
 }
 
 export interface Pagination<T> {
