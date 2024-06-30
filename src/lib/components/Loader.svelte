@@ -5,7 +5,7 @@
     let dispatch = createEventDispatcher();
 </script>
 
-<div use:inView on:enter={() => dispatch("loaded")}>Loading</div>
+<div use:inView={0.2} on:enter={() => dispatch("loaded")}>Loading</div>
 
 <style lang="scss">
     div {

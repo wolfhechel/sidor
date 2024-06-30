@@ -11,6 +11,7 @@
     import ViewportVisible from "./ViewportVisible.svelte";
     import RenderHtml from "./RenderHtml.svelte";
     import ScrollProgress from "./ScrollProgress.svelte";
+    import AudioPlayer from "./AudioPlayer.svelte";
 
     export let entry: Entry;
     export let entryIndex: number;
@@ -90,10 +91,13 @@
 
     <section>
         {#if audio}
-            <audio controls>
-                <source src={audio.url} type={audio.mime_type} />
-                Your browser does not support the audio element.
-            </audio>
+            <AudioPlayer
+                src={audio.url}
+                metadata={new MediaMetadata({
+                    artist: entry.feed.title,
+                    title: entry.title,
+                })}
+            />
         {:else if domain(entry.feed.feed_url) != domain(entry.url)}
             <ViewportVisible>
                 <LinkPreview url={entry.url} />

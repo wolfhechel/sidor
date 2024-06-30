@@ -1,50 +1,31 @@
 <script lang="ts">
-    import type { ComponentType } from "svelte";
-
     let checked = false;
-    let selectedOption: Option | undefined;
-
-    interface Option {
-        label: string;
-        component: ComponentType;
-    }
-
-    let options: Option[] = [];
-
-    const onClick = (index: number) => {
-        let option: Option = options[index];
-
-        selectedOption = option;
-        checked = false;
-    };
 </script>
 
-<div>
+<aside>
     <input bind:checked type="checkbox" id="toggle-settings-page" />
     <label id="settings-container" for="toggle-settings-page">
         <span></span>
         <span></span>
         <span></span>
     </label>
-    <ul>
-        {#each options as option, i}
-            <li>
-                <button on:click={() => onClick(i)}>{option.label}</button>
-            </li>
-        {/each}
-    </ul>
-</div>
+    <div><slot /></div>
+</aside>
 
 <style lang="scss">
     @use "$lib/breakpoints";
 
-    div {
+    aside {
         border-left: 1px solid var(--border-color);
         height: 100%;
 
         input,
-        ul {
+        div {
             display: none;
+        }
+
+        div {
+            background-color: var(--background-color);
         }
 
         label {
@@ -67,32 +48,6 @@
             }
         }
 
-        ul {
-            margin: 0;
-            padding: 0;
-
-            li {
-                list-style-type: none;
-                border-bottom: 1px solid var(--border-color);
-
-                button {
-                    border: 0;
-                    background-color: var(--background-color);
-                    cursor: pointer;
-                    height: 100%;
-                    width: 100%;
-                    padding: 10px;
-                    text-align: right;
-                    font-weight: bold;
-
-                    &:hover,
-                    &:active {
-                        background-color: var(--button-hover-color);
-                    }
-                }
-            }
-        }
-
         input[type="checkbox"]:checked ~ label {
             background-color: var(--button-hover-color);
 
@@ -112,32 +67,20 @@
             }
         }
 
-        input[type="checkbox"]:checked ~ ul {
+        input[type="checkbox"]:checked ~ div {
             display: block;
             position: absolute;
             right: 0;
-            top: 47px;
+            bottom: 47px;
             background-color: var(--background-color);
             width: 100%;
         }
     }
 
     @media screen and (min-width: breakpoints.$desktop) {
-        div {
+        aside {
             display: flex;
             justify-content: end;
-
-            ul {
-                display: inline-flex;
-                flex-direction: column;
-                min-width: 300px;
-                gap: 10px;
-                padding: 10px;
-
-                li {
-                    border-bottom: 0;
-                }
-            }
 
             label {
                 display: none;

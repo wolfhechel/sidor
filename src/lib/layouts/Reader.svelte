@@ -10,7 +10,7 @@
 		type Page,
 	} from "$lib/components/PagedContainer.svelte";
 	import TabList, { type Tab } from "$lib/components/TabList.svelte";
-	import ContextMenu from "$lib/components/ContextMenu.svelte";
+	/* import ContextMenu from "$lib/components/ContextMenu.svelte"; */
 
 	const reloadAfter = 10 * 60 * 1000;
 	let latestLoad: number;
@@ -73,9 +73,7 @@
 		<nav>
 			<TabList bind:currentTab={currentPage} tabs={pages} />
 		</nav>
-		<aside>
-			<ContextMenu />
-		</aside>
+		<aside></aside>
 	</header>
 
 	<PagedContainer bind:currentPage {pages} on:pageChanged={pageChanged} />
@@ -117,6 +115,7 @@
 		border-top: 1px solid var(--border-color);
 		display: flex;
 		gap: 5px;
+		z-index: 1;
 
 		@media screen and (min-width: breakpoints.$desktop) {
 			display: contents;
