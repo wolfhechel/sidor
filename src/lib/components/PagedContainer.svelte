@@ -72,12 +72,11 @@
             list-style-type: none;
             flex: none;
             width: 100%;
+            height: 100%;
             background-color: #f1f1f1;
 
             scroll-snap-align: start;
             scroll-snap-stop: always;
-            overflow-y: scroll;
-            overflow-x: clip;
         }
     }
 </style>

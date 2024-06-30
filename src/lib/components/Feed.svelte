@@ -108,29 +108,36 @@
 				}
 			});
 	};
+
+	let el: HTMLElement;
 </script>
 
-<section id={`${category.id}`}>
+<section id={`${category.id}`} bind:this={el}>
 	{#each $groupedEntries as { key, entries }}
 		<time>{key}</time>
 		{#each entries as entry}
-			<div id={`${category.id}-${entry._index}`}>
-				<Post {entry} on:setStatus={setStatus} />
-			</div>
+			<Post
+				{entry}
+				entryIndex={entry._index}
+				on:setStatus={setStatus}
+				scrollParent={el}
+			/>
 		{/each}
 	{/each}
-</section>
 
-{#if loadMore}
-	<Loader on:loaded={load} />
-{/if}
+	{#if loadMore}
+		<Loader on:loaded={load} />
+	{/if}
+</section>
 
 <style lang="scss">
 	section {
 		display: flex;
 		flex-direction: column;
 		gap: 5px;
-		padding-top: 5px;
+		height: 100%;
+		overflow-y: scroll;
+		overflow-x: clip;
 
 		time {
 			padding: 10px 15px;

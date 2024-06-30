@@ -48,7 +48,7 @@
                 let title =
                     firstKey(meta, metadata_map.title) ||
                     doc.querySelector("title")?.textContent ||
-                    "";
+                    url;
                 let description = firstKey(meta, metadata_map.description);
                 let image = firstKey(meta, metadata_map.image);
 

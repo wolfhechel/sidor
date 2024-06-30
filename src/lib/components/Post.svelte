@@ -10,8 +10,11 @@
     import LinkPreview from "./LinkPreview.svelte";
     import ViewportVisible from "./ViewportVisible.svelte";
     import RenderHtml from "./RenderHtml.svelte";
+    import ScrollProgress from "./ScrollProgress.svelte";
 
     export let entry: Entry;
+    export let entryIndex: number;
+    export let scrollParent: HTMLElement;
 
     const dispatch = createEventDispatcher();
 
@@ -54,17 +57,35 @@
     };
 
     $: externalLink = findExternalLink(entry.content);
+
+    let contentElement: HTMLElement;
+    let scrollMarginBottom: number;
+    let scrollMarginTop: number;
+
+    $: scrollMargin = scrollMarginBottom + scrollMarginTop;
 </script>
 
-<article class:read={entry.status == "read"}>
-    <header>
-        <address>
-            <Favicon url={entry.url} size="20" /><b>{entry.feed.title}</b>
-        </address>
+<article
+    bind:this={contentElement}
+    class:read={entry.status == "read"}
+    id={`${entry.feed.category.id}-${entryIndex}`}
+>
+    <header bind:clientHeight={scrollMarginTop}>
+        <div>
+            <address>
+                <Favicon url={entry.url} size="20" /><b>{entry.feed.title}</b>
+            </address>
 
-        {#if entry.title}
-            <a target="_blank" href={entry.url}>{entry.title}</a>
-        {/if}
+            {#if entry.title}
+                <a target="_blank" href={entry.url}>{entry.title}</a>
+            {/if}
+        </div>
+
+        <ScrollProgress
+            {contentElement}
+            {scrollParent}
+            bind:marginBottom={scrollMargin}
+        />
     </header>
 
     <section>
@@ -86,7 +107,7 @@
         <RenderHtml html={entry.content} />
     </section>
 
-    <footer>
+    <footer bind:clientHeight={scrollMarginBottom}>
         <small>Read </small><input
             type="checkbox"
             bind:checked={isRead}
@@ -117,25 +138,27 @@
         header {
             position: sticky;
             top: 0;
-            padding: 10px 15px;
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             background-color: var(--background-color);
             z-index: 2;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
-            address {
-                display: flex;
-                font-style: normal;
-                font-size: 0.8rem;
-                padding-bottom: 10px;
-                align-items: center;
-                gap: 5px;
-            }
+            div {
+                padding: 10px 15px;
 
-            a {
-                text-decoration: none;
-                color: var(--text-color);
-                font-weight: bold;
+                address {
+                    display: flex;
+                    font-style: normal;
+                    font-size: 0.8rem;
+                    padding-bottom: 10px;
+                    align-items: center;
+                    gap: 5px;
+                }
+
+                a {
+                    text-decoration: none;
+                    color: var(--text-color);
+                    font-weight: bold;
+                }
             }
         }
 
