@@ -1,7 +1,12 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
+    import {
+        domain,
+        findEnclosure,
+        findExternalLinks,
+        removeDomElements,
+    } from "$lib/utils";
     import type { Entry } from "$lib/api";
-    import { domain } from "$lib/utils";
 
     import Favicon from "./Favicon.svelte";
     import LinkPreview from "./LinkPreview.svelte";
@@ -9,6 +14,8 @@
     import RenderHtml from "./RenderHtml.svelte";
     import ScrollProgress from "./ScrollProgress.svelte";
     import AudioPlayer from "./AudioPlayer.svelte";
+    import Disclosure from "./Disclosure.svelte";
+    import YouTubePlayer from "./YouTubePlayer.svelte";
 
     export let entry: Entry;
     export let entryIndex: number;
@@ -16,45 +23,19 @@
 
     const dispatch = createEventDispatcher();
 
-    $: isRead = entry.status == "read";
+    $: audio = findEnclosure(entry.enclosures, "audio/");
 
-    $: audio = entry.enclosures.find((enclosure) =>
-        enclosure.mime_type.startsWith("audio"),
+    $: youTubeVideo = findEnclosure(
+        entry.enclosures,
+        "application/x-shockwave-flash",
     );
 
-    const toggleStatus = (e: Event & { target: HTMLInputElement }) => {
-        e.target.checked = isRead;
-        e.target.indeterminate = false;
+    $: youTubeThumbnail = findEnclosure(entry.enclosures, "image/");
 
-        dispatch("setStatus", {
-            entry_id: entry.id,
-            status: isRead ? "unread" : "read",
-        });
-    };
-
-    const findExternalLink = (content: string): string | null => {
-        const parser: DOMParser = new DOMParser();
-
-        let document = parser.parseFromString(content, "text/html");
-
-        let rawLinks = Array.from(document.querySelectorAll("a")).filter(
-            (element) => {
-                return element.href == element.innerText;
-            },
-        );
-
-        if (!rawLinks) {
-            return null;
-        }
-
-        if (rawLinks.length > 1) {
-            return null;
-        }
-
-        return rawLinks.at(0)?.href || null;
-    };
-
-    $: externalLink = findExternalLink(entry.content);
+    $: previewLink =
+        domain(entry.feed.feed_url) != domain(entry.url)
+            ? entry.url
+            : findExternalLinks(entry.content).at(0);
 
     let contentElement: HTMLElement;
     let scrollMarginBottom: number;
@@ -63,17 +44,6 @@
     $: scrollMargin = scrollMarginBottom + scrollMarginTop;
 
     let markedAsRead = entry.status != "unread";
-
-    const completed = () => {
-        if (markedAsRead) return;
-
-        markedAsRead = true;
-
-        dispatch("setStatus", {
-            entry_id: entry.id,
-            status: "read",
-        });
-    };
 </script>
 
 <article
@@ -92,12 +62,25 @@
             {/if}
         </div>
 
-        <ScrollProgress
-            {contentElement}
-            {scrollParent}
-            bind:marginBottom={scrollMargin}
-            on:completed={completed}
-        />
+        {#if !audio && !youTubeVideo}
+            <ScrollProgress
+                {contentElement}
+                {scrollParent}
+                bind:marginBottom={scrollMargin}
+                on:completed={() => {
+                    if (markedAsRead) {
+                        return;
+                    }
+
+                    markedAsRead = true;
+
+                    dispatch("setStatus", {
+                        entry_id: entry.id,
+                        status: "read",
+                    });
+                }}
+            />
+        {/if}
     </header>
 
     <section>
@@ -109,24 +92,53 @@
                     title: entry.title,
                 })}
             />
-        {:else if domain(entry.feed.feed_url) != domain(entry.url)}
-            <ViewportVisible>
-                <LinkPreview url={entry.url} />
-            </ViewportVisible>
-        {:else if externalLink}
-            <ViewportVisible>
-                <LinkPreview url={externalLink} />
-            </ViewportVisible>
-        {/if}
 
-        <RenderHtml html={entry.content} />
+            <Disclosure summary="Description">
+                <RenderHtml html={entry.content} />
+            </Disclosure>
+        {:else if youTubeVideo}
+            <YouTubePlayer
+                url={youTubeVideo.url}
+                thumbnail={youTubeThumbnail ? youTubeThumbnail.url : ""}
+                on:ended={() => {
+                    dispatch("setStatus", {
+                        entry_id: entry.id,
+                        status: "read",
+                    });
+                }}
+            />
+
+            <Disclosure summary="Description">
+                <RenderHtml
+                    html={removeDomElements(
+                        entry.content,
+                        'iframe[src*="www.youtube"]',
+                    )}
+                />
+            </Disclosure>
+        {:else}
+            {#if previewLink}
+                <ViewportVisible>
+                    <LinkPreview url={entry.url} />
+                </ViewportVisible>
+            {/if}
+
+            <RenderHtml html={entry.content} />
+        {/if}
     </section>
 
     <footer bind:clientHeight={scrollMarginBottom}>
         <small>Read </small><input
             type="checkbox"
-            bind:checked={isRead}
-            on:change={toggleStatus}
+            checked={entry.status == "read"}
+            on:change={(e) => {
+                e.currentTarget.indeterminate = false;
+
+                dispatch("setStatus", {
+                    entry_id: entry.id,
+                    status: entry.status == "read" ? "unread" : "read",
+                });
+            }}
         />
     </footer>
 </article>
@@ -141,10 +153,6 @@
         transition: opacity 0.25s ease-in-out;
         -moz-transition: opacity 0.25s ease-in-out;
         -webkit-transition: opacity 0.25s ease-in-out;
-
-        audio {
-            width: 100%;
-        }
 
         &.read {
             opacity: 0.4;
