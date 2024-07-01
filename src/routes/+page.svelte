@@ -3,6 +3,7 @@
     import { writable, type Writable } from "svelte/store";
 
     import { page } from "$app/stores";
+    import { base } from "$app/paths";
     import { goto } from "$app/navigation";
 
     import { type Category } from "$lib/api";
@@ -28,7 +29,7 @@
             })
             .catch((reason) => {
                 if (!$client.isAuthenticated) {
-                    goto("/connect");
+                    goto(`${base}/connect`);
                 } else {
                     console.error(reason);
                 }
