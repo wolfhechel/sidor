@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { onMount } from "svelte";
     import { writable, type Writable } from "svelte/store";
 
     import { page } from "$app/stores";
@@ -16,6 +15,7 @@
     import CollapsedLayout from "$lib/components/CollapsedLayout.svelte";
 
     const reloadAfter = 10 * 60 * 1000;
+
     let latestLoad: number;
 
     const categories: Writable<Category[]> = writable([]);
@@ -61,22 +61,17 @@
     let currentPage: number = parseInt($page.url.hash.slice(1)) || 1;
 
     update();
-
-    onMount(() => {
-        document.addEventListener(
-            "visibilitychange",
-            () => !document.hidden && refreshIfNeeded(),
-        );
-    });
-
-    const pageChanged = (e: CustomEvent<number>) => {
-        window.location.hash = `#${e.detail}`;
-    };
 </script>
 
 <svelte:head>
     <title>{pages.find(({ id }) => id == currentPage)?.title}</title>
 </svelte:head>
+
+<svelte:document
+    on:visibilitychange={() => {
+        !document.hidden && refreshIfNeeded();
+    }}
+/>
 
 <CollapsedLayout>
     <TabList slot="nav" bind:currentTab={currentPage} tabs={pages} />
@@ -84,6 +79,8 @@
         slot="main"
         bind:currentPage
         {pages}
-        on:pageChanged={pageChanged}
+        on:pageChanged={(e) => {
+            window.location.hash = `#${e.detail}`;
+        }}
     />
 </CollapsedLayout>
