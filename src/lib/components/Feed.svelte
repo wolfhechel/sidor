@@ -113,6 +113,7 @@
 </script>
 
 <section id={`${category.id}`} bind:this={el}>
+	<span id={`${category.id}_`}></span>
 	{#each $groupedEntries as { key, entries }}
 		<time>{key}</time>
 		{#each entries as entry}
@@ -132,12 +133,13 @@
 
 <style lang="scss">
 	section {
+		height: 100%;
+		width: 100%;
 		display: flex;
 		flex-direction: column;
 		gap: 5px;
-		height: 100%;
 		overflow-y: scroll;
-		overflow-x: clip;
+		background-color: #f1f1f1;
 
 		time {
 			padding: 10px 15px;

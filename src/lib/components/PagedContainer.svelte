@@ -50,30 +50,26 @@
 </ul>
 
 <style lang="scss">
-    @use "$lib/breakpoints";
-
     ul {
         display: flex;
         height: 100%;
         width: 100%;
         margin: 0;
         padding: 0;
-
         overflow-x: scroll;
         overflow-y: hidden;
         scroll-snap-type: x mandatory;
         scroll-behavior: smooth;
 
-        @media screen and (min-width: breakpoints.$tablet) {
-            max-width: var(--content-size);
-        }
-
         li {
             list-style-type: none;
             flex: none;
+            display: flex;
             width: 100%;
             height: 100%;
             background-color: #f1f1f1;
+            overflow-x: clip;
+            overflow-y: hidden;
 
             scroll-snap-align: start;
             scroll-snap-stop: always;

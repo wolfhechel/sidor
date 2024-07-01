@@ -1,18 +1,18 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { writable, type Writable } from "svelte/store";
+
+    import { page } from "$app/stores";
+    import { goto } from "$app/navigation";
+
     import { type Category } from "$lib/api";
     import { client } from "$lib/store";
-
     import Feed from "$lib/components/Feed.svelte";
-
     import PagedContainer, {
         type Page,
     } from "$lib/components/PagedContainer.svelte";
-
     import TabList, { type Tab } from "$lib/components/TabList.svelte";
-    import { page } from "$app/stores";
-    import { goto } from "$app/navigation";
+    import CollapsedLayout from "$lib/components/CollapsedLayout.svelte";
 
     const reloadAfter = 10 * 60 * 1000;
     let latestLoad: number;
@@ -77,88 +77,13 @@
     <title>{pages.find(({ id }) => id == currentPage)?.title}</title>
 </svelte:head>
 
-<main>
-    <header>
-        <nav>
-            <TabList bind:currentTab={currentPage} tabs={pages} />
-        </nav>
-        <aside></aside>
-    </header>
-
-    <PagedContainer bind:currentPage {pages} on:pageChanged={pageChanged} />
-</main>
-
-<style lang="scss">
-    @use "$lib/breakpoints";
-
-    main {
-        height: 100%;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column-reverse;
-        width: 100%;
-        justify-content: center;
-
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-        &::-webkit-scrollbar {
-            display: none;
-        }
-
-        @media screen and (min-width: breakpoints.$tablet) {
-            max-width: var(--content-size);
-        }
-
-        @media screen and (min-width: breakpoints.$desktop) {
-            flex-direction: row;
-            width: 100%;
-            max-width: unset;
-        }
-    }
-
-    header {
-        position: sticky;
-        top: 0;
-        background-color: white;
-        height: 45px;
-        border-top: 1px solid var(--border-color);
-        display: flex;
-        gap: 5px;
-        z-index: 1;
-
-        @media screen and (min-width: breakpoints.$desktop) {
-            display: contents;
-
-            nav {
-                order: 2;
-            }
-
-            aside {
-                order: 0;
-            }
-
-            nav,
-            aside {
-                width: auto;
-                flex: 1;
-                padding-top: 60px;
-            }
-        }
-    }
-
-    nav {
-        display: flex;
-        overflow-x: scroll;
-        flex: 1;
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-
-        &::-webkit-scrollbar {
-            display: none;
-        }
-    }
-
-    aside {
-        width: 42px;
-    }
-</style>
+<CollapsedLayout>
+    <TabList slot="nav" bind:currentTab={currentPage} tabs={pages} />
+    <div slot="aside">test</div>
+    <PagedContainer
+        slot="main"
+        bind:currentPage
+        {pages}
+        on:pageChanged={pageChanged}
+    />
+</CollapsedLayout>

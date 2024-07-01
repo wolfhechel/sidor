@@ -8,6 +8,8 @@
 
 <style lang="scss">
     div {
+        word-break: break-word;
+
         :global(table) {
             border-spacing: 0;
         }

@@ -10,22 +10,22 @@
     export let currentTab: number;
 </script>
 
-<ul>
+<menu>
     {#each tabs as tab}
         {@const isCurrent = currentTab == tab.id}
         <li>
             <a
-                href={isCurrent ? `#${tab.id}-0` : `#${tab.id}`}
-                aria-current={isCurrent ? "page" : undefined}>{tab.title}</a
+                href={isCurrent ? `#${tab.id}_` : `#${tab.id}`}
+                aria-current={isCurrent ? "page" : undefined}
+            >
+                <span>{tab.title}</span></a
             >
         </li>
     {/each}
-</ul>
+</menu>
 
 <style lang="scss">
-    @use "$lib/breakpoints";
-
-    ul {
+    menu {
         margin: 0;
         padding: 0;
         display: inline-flex;
@@ -34,17 +34,20 @@
         li {
             list-style-type: none;
             flex: 1;
+            display: flex;
 
             a {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                white-space: nowrap;
                 color: var(--text-color);
                 text-decoration: none;
-                display: block;
-                padding: 12px;
-                white-space: nowrap;
-                border-bottom: 2px solid transparent;
-                letter-spacing: 0.25px;
                 font-weight: 700;
                 text-align: center;
+                letter-spacing: 0.25px;
+                border-bottom: 2px solid transparent;
 
                 &:hover {
                     background-color: var(--button-hover-color);
@@ -57,18 +60,16 @@
         }
     }
 
-    @media screen and (min-width: breakpoints.$desktop) {
-        ul {
+    @media (orientation: landscape) {
+        menu {
             flex-direction: column;
-            gap: 10px;
-            padding: 10px;
-            min-width: 300px;
 
             li {
                 flex: none;
 
                 a {
-                    text-align: left;
+                    padding: 10px;
+                    justify-content: flex-start;
                     border-left: 2px solid transparent;
                     border-bottom: 0;
                 }

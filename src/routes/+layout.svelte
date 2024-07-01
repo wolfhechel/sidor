@@ -5,8 +5,6 @@
 <slot />
 
 <style lang="scss">
-	@use "$lib/breakpoints";
-
 	:global(body) {
 		--nord0: #2e3440;
 		--nord1: #3b4252;
