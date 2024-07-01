@@ -1,11 +1,13 @@
 <script lang="ts">
-    import { inView } from "$lib/inview";
+    import { inview } from "svelte-inview";
     import { createEventDispatcher } from "svelte";
 
     let dispatch = createEventDispatcher();
 </script>
 
-<div use:inView={0.2} on:enter={() => dispatch("loaded")}>Loading</div>
+<div use:inview={{ threshold: 0.2 }} on:inview_enter={() => dispatch("loaded")}>
+    Loading
+</div>
 
 <style lang="scss">
     div {

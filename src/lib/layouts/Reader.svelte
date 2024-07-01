@@ -9,8 +9,8 @@
 	import PagedContainer, {
 		type Page,
 	} from "$lib/components/PagedContainer.svelte";
+
 	import TabList, { type Tab } from "$lib/components/TabList.svelte";
-	/* import ContextMenu from "$lib/components/ContextMenu.svelte"; */
 
 	const reloadAfter = 10 * 60 * 1000;
 	let latestLoad: number;
