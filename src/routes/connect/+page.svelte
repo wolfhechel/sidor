@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
     import { Client, type User } from "$lib/api";
     import { profile, type Profile } from "$lib/store";
 
@@ -13,17 +14,24 @@
         api.get<User>("me")
             .then((user): Profile => {
                 return {
-                    host: host,
-                    token: token,
+                    host,
+                    token,
+                    user,
                 };
             })
             .then(profile.set)
+            .then(() => {
+                goto("/");
+            })
             .catch(({ message }) => {
                 error = message;
             });
     };
 </script>
 
+<svelte:head>
+    <title>Connect to Miniflux instance</title>
+</svelte:head>
 <main>
     <section>
         <p>
