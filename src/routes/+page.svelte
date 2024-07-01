@@ -80,7 +80,6 @@
 
 <CollapsedLayout>
     <TabList slot="nav" bind:currentTab={currentPage} tabs={pages} />
-    <div slot="aside">test</div>
     <PagedContainer
         slot="main"
         bind:currentPage
