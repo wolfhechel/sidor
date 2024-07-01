@@ -1,6 +1,3 @@
-<script lang="ts" context="module">
-</script>
-
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
     import type { Entry } from "$lib/api";
@@ -65,7 +62,13 @@
 
     $: scrollMargin = scrollMarginBottom + scrollMarginTop;
 
+    let markedAsRead = entry.status != "unread";
+
     const completed = () => {
+        if (markedAsRead) return;
+
+        markedAsRead = true;
+
         dispatch("setStatus", {
             entry_id: entry.id,
             status: "read",
