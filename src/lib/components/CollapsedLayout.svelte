@@ -42,7 +42,6 @@
     div#navigation {
         border-top: 1px solid var(--border-color);
         display: flex;
-        gap: 5px;
         z-index: 2;
         container: navigation-bar / size;
         height: 40px;
@@ -128,6 +127,7 @@
             flex-direction: row;
             width: 100%;
             max-width: unset;
+            gap: 5px;
         }
 
         div#navigation {
@@ -137,6 +137,11 @@
         main {
             width: 100%;
             order: 1;
+        }
+
+        nav,
+        aside {
+            padding-top: 60px;
         }
 
         nav {

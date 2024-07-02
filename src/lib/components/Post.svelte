@@ -159,7 +159,6 @@
         transition: opacity 0.25s ease-in-out;
         -moz-transition: opacity 0.25s ease-in-out;
         -webkit-transition: opacity 0.25s ease-in-out;
-        gap: var(--vertical-spacing);
 
         &.read {
             opacity: 0.4;
@@ -193,6 +192,7 @@
         }
 
         section {
+            margin-top: var(--vertical-spacing);
             font-size: 16px;
             letter-spacing: 0.2px;
             font-weight: 400;
@@ -206,10 +206,12 @@
 
             &.video {
                 padding: 0;
+                margin: 0;
             }
         }
 
         footer {
+            margin-top: var(--vertical-spacing);
             padding: var(--vertical-spacing) var(--horizontal-spacing);
             border-top: var(--article-border);
             display: flex;

@@ -6,3 +6,9 @@
     <summary>{summary}</summary>
     <slot />
 </details>
+
+<style lang="scss">
+    summary {
+        cursor: pointer;
+    }
+</style>

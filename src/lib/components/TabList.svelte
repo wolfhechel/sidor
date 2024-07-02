@@ -48,6 +48,7 @@
                 text-align: center;
                 letter-spacing: 0.25px;
                 border-bottom: 2px solid transparent;
+                padding: 0 15px;
 
                 &:hover {
                     background-color: var(--button-hover-color);

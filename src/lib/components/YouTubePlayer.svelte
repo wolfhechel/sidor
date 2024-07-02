@@ -179,6 +179,7 @@
         padding: 0;
         border: 0;
         cursor: pointer;
+        line-height: 0;
     }
 
     :global(iframe) {
