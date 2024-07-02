@@ -36,6 +36,7 @@
 <style lang="scss">
     div {
         display: flex;
+        min-height: 100%;
         align-items: center;
         gap: 10px;
         justify-content: center;
