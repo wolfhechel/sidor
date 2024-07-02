@@ -109,11 +109,7 @@
         grid-template-columns: 2.5em 1fr;
         align-items: center;
         gap: 1em;
-        padding: 0.5em 1em 0.5em 0.5em;
-        border-radius: 2em;
-        background: var(--bg-1);
         transition: filter 0.2s;
-        color: var(--fg-3);
         user-select: none;
     }
 

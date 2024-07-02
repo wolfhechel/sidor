@@ -30,7 +30,11 @@
         "application/x-shockwave-flash",
     );
 
-    $: youTubeThumbnail = findEnclosure(entry.enclosures, "image/");
+    $: hasEnclosure = youTubeVideo || audio;
+
+    $: html = youTubeVideo
+        ? removeDomElements(entry.content, 'iframe[src*="www.youtube"]')
+        : entry.content;
 
     $: previewLink =
         domain(entry.feed.feed_url) != domain(entry.url)
@@ -83,8 +87,8 @@
         {/if}
     </header>
 
-    <section>
-        {#if audio}
+    {#if audio}
+        <section class="audio">
             <AudioPlayer
                 src={audio.url}
                 metadata={new MediaMetadata({
@@ -92,14 +96,11 @@
                     title: entry.title,
                 })}
             />
-
-            <Disclosure summary="Description">
-                <RenderHtml html={entry.content} />
-            </Disclosure>
-        {:else if youTubeVideo}
+        </section>
+    {:else if youTubeVideo}
+        <section class="video">
             <YouTubePlayer
                 url={youTubeVideo.url}
-                thumbnail={youTubeThumbnail ? youTubeThumbnail.url : ""}
                 on:ended={() => {
                     dispatch("setStatus", {
                         entry_id: entry.id,
@@ -107,24 +108,25 @@
                     });
                 }}
             />
+        </section>
+    {:else if previewLink}
+        <section class="link-preview">
+            <ViewportVisible>
+                <LinkPreview url={entry.url} />
+            </ViewportVisible>
+        </section>
+    {/if}
 
-            <Disclosure summary="Description">
-                <RenderHtml
-                    html={removeDomElements(
-                        entry.content,
-                        'iframe[src*="www.youtube"]',
-                    )}
-                />
-            </Disclosure>
-        {:else}
-            {#if previewLink}
-                <ViewportVisible>
-                    <LinkPreview url={entry.url} />
-                </ViewportVisible>
+    <section class="text">
+        <div class="padd">
+            {#if hasEnclosure}
+                <Disclosure summary="Description">
+                    <RenderHtml {html} />
+                </Disclosure>
+            {:else}
+                <RenderHtml {html} />
             {/if}
-
-            <RenderHtml html={entry.content} />
-        {/if}
+        </div>
     </section>
 
     <footer bind:clientHeight={scrollMarginBottom}>
@@ -153,6 +155,7 @@
         transition: opacity 0.25s ease-in-out;
         -moz-transition: opacity 0.25s ease-in-out;
         -webkit-transition: opacity 0.25s ease-in-out;
+        gap: 10px;
 
         &.read {
             opacity: 0.4;
@@ -191,10 +194,15 @@
             font-weight: 400;
             line-height: 1.4;
             position: relative;
-            padding: 10px 15px;
             display: flex;
             flex-direction: column;
             gap: 10px;
+
+            padding: 0 15px;
+
+            &.video {
+                padding: 0;
+            }
         }
 
         footer {

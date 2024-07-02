@@ -81,10 +81,10 @@
 </script>
 
 <script lang="ts">
-    export let url: string;
-    export let thumbnail: string;
-
     import { createEventDispatcher } from "svelte";
+    import YouTubeThumbnail from "./YouTubeThumbnail.svelte";
+
+    export let url: string;
 
     const dispatch = createEventDispatcher();
 
@@ -94,7 +94,9 @@
 
     let el: HTMLElement;
 
-    const metadata: Promise<{
+    const loadMetadata = async (
+        videoId: string,
+    ): Promise<{
         title: string;
         author_name: string;
         author_url: string;
@@ -104,16 +106,22 @@
         thumbnail_width: number;
         thumbnail_url: string;
         html: string;
-    }> = fetch(
-        `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`,
-    ).then((response) => response.json());
+    }> => {
+        return fetch(
+            `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`,
+        ).then((response) => response.json());
+    };
 
-    function load(height: number, width: number) {
+    const loadVideoPlayer = (
+        height: number,
+        width: number,
+        videoId: string,
+    ) => {
         player = new YT.Player(el, {
-            height: height,
-            width: width,
+            height,
+            width,
             host: "https://www.youtube-nocookie.com",
-            videoId: parseYouTubeId(url),
+            videoId,
             events: {
                 onReady: (event) => {
                     event.target.playVideo();
@@ -149,31 +157,28 @@
                 },
             },
         });
-    }
+    };
 
-    new DOMParser();
+    const load = () => {
+        loadMetadata(videoId).then(({ height, width }) => {
+            loadVideoPlayer(height, width, videoId);
+        });
+    };
 </script>
 
 <svelte:head>
     <script src="https://www.youtube.com/iframe_api"></script>
 </svelte:head>
 
-{#await metadata then { height, width }}
-    <button on:click={() => load(height, width)} bind:this={el}>
-        <img src={thumbnail} alt="Thumbnail" />
-    </button>
-{/await}
+<button on:click={() => load()} bind:this={el}
+    ><YouTubeThumbnail {videoId} /></button
+>
 
 <style lang="scss">
     button {
         padding: 0;
         border: 0;
-
-        img {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            object-fit: cover;
-        }
+        cursor: pointer;
     }
 
     :global(iframe) {
