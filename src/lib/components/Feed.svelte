@@ -23,6 +23,7 @@
 	import Post from "./Post.svelte";
 	import Loader from "./Loader.svelte";
 	import { client } from "$lib/store";
+	import Finished from "./Finished.svelte";
 
 	export let category: Category;
 
@@ -63,7 +64,7 @@
 				direction: "desc",
 				limit: limit.toString(),
 				offset: offset.toString(),
-				status: ["unread", "read"],
+				status: ["unread"],
 			})
 			.then((value) => {
 				if (total == Infinity) {
@@ -128,6 +129,8 @@
 
 	{#if loadMore}
 		<Loader on:loaded={load} />
+	{:else}
+		<Finished />
 	{/if}
 </section>
 
@@ -139,13 +142,13 @@
 		flex-direction: column;
 		gap: 5px;
 		overflow-y: scroll;
-		background-color: #f1f1f1;
+		background-color: var(--depth-0-color);
 
 		time {
 			padding: 10px 15px;
 			font-weight: bold;
 			font-size: 0.8rem;
-			color: #636363;
+			color: var(--secondary-text-color);
 		}
 	}
 </style>

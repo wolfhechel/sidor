@@ -40,7 +40,6 @@
     }
 
     div#navigation {
-        background-color: white;
         border-top: 1px solid var(--border-color);
         display: flex;
         gap: 5px;
@@ -70,7 +69,6 @@
 
         div {
             display: none;
-            background-color: var(--background-color);
         }
 
         label {

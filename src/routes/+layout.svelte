@@ -30,7 +30,8 @@
 		--content-size: 600px;
 		--button-hover-color: rgb(243, 243, 248);
 		--text-secondary: rgb(84, 86, 100);
-		--background-color: #fffafa;
+		--depth-0-color: #f1f1f1;
+		--depth-1-color: #fffafa;
 		--text-color: #313131;
 		--secondary-text-color: #536471;
 
@@ -52,7 +53,7 @@
 
 	:global(html, body) {
 		height: 100%;
-		background-color: var(--background-color);
+		background-color: var(--depth-1-color);
 		font-size: 16px;
 	}
 </style>

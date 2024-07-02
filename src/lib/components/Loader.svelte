@@ -13,7 +13,8 @@
     div {
         text-align: center;
         font-weight: bold;
-        padding: 30px;
-        font-size: 1.2rem;
+        padding: 15px;
+        font-size: 1.25rem;
+        color: var(--secondary-text-color);
     }
 </style>

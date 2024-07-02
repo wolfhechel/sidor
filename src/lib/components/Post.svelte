@@ -150,7 +150,7 @@
         display: flex;
         flex-direction: column;
         box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.4);
-        background-color: var(--background-color);
+        background-color: var(--depth-1-color);
         color: var(--text-color);
         transition: opacity 0.25s ease-in-out;
         -moz-transition: opacity 0.25s ease-in-out;
@@ -164,8 +164,8 @@
         header {
             position: sticky;
             top: 0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            background-color: var(--background-color);
+            border-bottom: 1px solid #0000000f;
+            background-color: var(--depth-1-color);
             z-index: 2;
 
             div {
@@ -207,7 +207,7 @@
 
         footer {
             padding: 10px 15px;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            border-top: 1px solid #0000000f;
             display: flex;
             align-items: center;
             justify-content: flex-end;
