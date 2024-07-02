@@ -7,8 +7,9 @@
     import Play from "$lib/icons/Play.svelte";
     import Pause from "$lib/icons/Pause.svelte";
     import { writable, type Writable } from "svelte/store";
+    import type { PointerEventHandler } from "svelte/elements";
 
-    export let src;
+    export let src: string;
     export let metadata: MediaMetadata;
 
     let time = 0;
@@ -22,6 +23,37 @@
         const seconds = Math.floor(time % 60);
 
         return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
+    };
+
+    const progressTrack: PointerEventHandler<HTMLElement> = (e) => {
+        const div = e.currentTarget;
+
+        const seek = (e: PointerEvent) => {
+            e.preventDefault();
+
+            const { left, width } = div.getBoundingClientRect();
+
+            let p = (e.clientX - left) / width;
+
+            if (p < 0) p = 0;
+            if (p > 1) p = 1;
+
+            time = p * duration;
+        };
+
+        seek(e);
+
+        window.addEventListener("pointermove", seek);
+
+        window.addEventListener(
+            "pointerup",
+            () => {
+                window.removeEventListener("pointermove", seek);
+            },
+            {
+                once: true,
+            },
+        );
     };
 </script>
 
@@ -62,37 +94,7 @@
     <div class="info">
         <div class="time">
             <span>{format(time)}</span>
-            <div
-                class="slider"
-                on:pointerdown={(e) => {
-                    const div = e.currentTarget;
-
-                    function seek(e) {
-                        e.preventDefault();
-                        const { left, width } = div.getBoundingClientRect();
-
-                        let p = (e.clientX - left) / width;
-                        if (p < 0) p = 0;
-                        if (p > 1) p = 1;
-
-                        time = p * duration;
-                    }
-
-                    seek(e);
-
-                    window.addEventListener("pointermove", seek);
-
-                    window.addEventListener(
-                        "pointerup",
-                        () => {
-                            window.removeEventListener("pointermove", seek);
-                        },
-                        {
-                            once: true,
-                        },
-                    );
-                }}
-            >
+            <div class="slider" on:pointerdown={progressTrack}>
                 <div
                     class="progress"
                     style="--progress: {time / duration}%"
