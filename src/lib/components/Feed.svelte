@@ -1,12 +1,3 @@
-<script lang="ts" context="module">
-	interface Grouped<T> {
-		key: string;
-		entries: (T & {
-			_index: number;
-		})[];
-	}
-</script>
-
 <script lang="ts">
 	import {
 		writable,
@@ -14,49 +5,32 @@
 		type Writable,
 		type Readable,
 	} from "svelte/store";
-	import { type Category, type Entry, type Pagination } from "$lib/api";
-	import dayjs from "dayjs";
-	import relativeTime from "dayjs/plugin/relativeTime";
 
-	dayjs.extend(relativeTime);
+	import { type Category, type Entry, type Pagination } from "$lib/api";
+	import { client } from "$lib/store";
+	import { groupByTime, type Grouped } from "$lib/utils";
 
 	import Post from "./Post.svelte";
 	import Loader from "./Loader.svelte";
-	import { client } from "$lib/store";
 	import Finished from "./Finished.svelte";
 
-	export let category: Category;
-
-	let limit = 10;
-
-	$: offset = 0;
-	$: total = Infinity;
+	const limit = 10;
 
 	const entries: Writable<Entry[]> = writable([]);
 
 	const groupedEntries: Readable<Grouped<Entry>[]> = derived(
 		[entries],
 		([$entries]) => {
-			return $entries.reduce((groups, entry, idx) => {
-				let value: string = dayjs(entry.published_at).from();
-
-				let group = groups.find(({ key }) => key == value);
-
-				if (!group) {
-					groups.push({
-						key: value,
-						entries: [Object.assign({ _index: idx }, entry)],
-					});
-				} else {
-					group.entries.push(Object.assign({ _index: idx }, entry));
-				}
-
-				return groups;
-			}, [] as Grouped<Entry>[]);
+			return groupByTime($entries, "published_at");
 		},
 	);
 
-	$: loadMore = $entries.length < total;
+	export let category: Category;
+
+	let el: HTMLElement;
+
+	$: offset = 0;
+	$: total = Infinity;
 
 	const load = () => {
 		$client
@@ -73,11 +47,7 @@
 
 				offset += limit;
 
-				$entries = $entries.concat(value.entries).sort((a, b) => {
-					return (
-						Date.parse(b.published_at) - Date.parse(a.published_at)
-					);
-				});
+				$entries = $entries.concat(value.entries);
 			});
 	};
 
@@ -109,25 +79,23 @@
 				}
 			});
 	};
-
-	let el: HTMLElement;
 </script>
 
 <section id={`${category.id}`} bind:this={el}>
 	<span id={`${category.id}_`}></span>
 	{#each $groupedEntries as { key, entries }}
 		<time>{key}</time>
-		{#each entries as entry}
+		{#each entries as { index, obj }}
 			<Post
-				{entry}
-				entryIndex={entry._index}
+				entry={obj}
+				entryIndex={index}
 				on:setStatus={setStatus}
 				scrollParent={el}
 			/>
 		{/each}
 	{/each}
 
-	{#if loadMore}
+	{#if $entries.length < total}
 		<Loader on:loaded={load} />
 	{:else}
 		<Finished />

@@ -66,7 +66,7 @@
             {/if}
         </div>
 
-        {#if !audio && !youTubeVideo}
+        {#if !hasEnclosure}
             <ScrollProgress
                 {contentElement}
                 {scrollParent}
@@ -147,6 +147,10 @@
 
 <style lang="scss">
     article {
+        --horizontal-spacing: 15px;
+        --vertical-spacing: 10px;
+        --article-border: 1px solid #0000000f;
+
         display: flex;
         flex-direction: column;
         box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.4);
@@ -155,7 +159,7 @@
         transition: opacity 0.25s ease-in-out;
         -moz-transition: opacity 0.25s ease-in-out;
         -webkit-transition: opacity 0.25s ease-in-out;
-        gap: 10px;
+        gap: var(--vertical-spacing);
 
         &.read {
             opacity: 0.4;
@@ -164,12 +168,12 @@
         header {
             position: sticky;
             top: 0;
-            border-bottom: 1px solid #0000000f;
+            border-bottom: var(--article-border);
             background-color: var(--depth-1-color);
             z-index: 2;
 
             div {
-                padding: 10px 15px;
+                padding: var(--vertical-spacing) var(--horizontal-spacing);
 
                 address {
                     display: flex;
@@ -196,9 +200,9 @@
             position: relative;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: var(--vertical-spacing);
 
-            padding: 0 15px;
+            padding: 0 var(--horizontal-spacing);
 
             &.video {
                 padding: 0;
@@ -206,8 +210,8 @@
         }
 
         footer {
-            padding: 10px 15px;
-            border-top: 1px solid #0000000f;
+            padding: var(--vertical-spacing) var(--horizontal-spacing);
+            border-top: var(--article-border);
             display: flex;
             align-items: center;
             justify-content: flex-end;
