@@ -6,8 +6,8 @@
 		type Readable,
 	} from "svelte/store";
 
-	import { type Category, type Entry, type Pagination } from "$lib/api";
 	import { client } from "$lib/store";
+	import { type Entry, type Pagination } from "$lib/api";
 	import { groupByTime, type Grouped } from "$lib/utils";
 
 	import Post from "./Post.svelte";
@@ -25,7 +25,9 @@
 		},
 	);
 
-	export let category: Category;
+	export let endpoint: string;
+	export let feedId: string;
+	export let params: { [key: string]: string | string[] };
 
 	let el: HTMLElement;
 
@@ -34,12 +36,17 @@
 
 	const load = () => {
 		$client
-			.get<Pagination<Entry>>(`categories/${category.id}/entries`, {
-				direction: "desc",
-				limit: limit.toString(),
-				offset: offset.toString(),
-				status: ["unread"],
-			})
+			.get<Pagination<Entry>>(
+				endpoint,
+				Object.assign(
+					{
+						direction: "desc",
+						limit: limit.toString(),
+						offset: offset.toString(),
+					},
+					params,
+				),
+			)
 			.then((value) => {
 				if (total == Infinity) {
 					total = value.total;
@@ -50,48 +57,14 @@
 				$entries = $entries.concat(value.entries);
 			});
 	};
-
-	const setStatus = (
-		e: CustomEvent<{ entry_id: number; status: string }>,
-	) => {
-		const entry_id = e.detail.entry_id;
-		const status = e.detail.status;
-
-		$client
-			.put<"">(`entries`, {
-				entry_ids: [entry_id],
-				status,
-			})
-			.then((response) => {
-				if (response == "") {
-					let entryIndex = $entries.findIndex(
-						(entry) => entry.id == entry_id,
-					);
-
-					let entry = $entries.at(entryIndex);
-
-					if (entry) {
-						entry.status = status;
-						$entries[entryIndex] = entry;
-					}
-
-					$entries = $entries;
-				}
-			});
-	};
 </script>
 
-<section id={`${category.id}`} bind:this={el}>
-	<span id={`${category.id}_`}></span>
+<section id={`${feedId}`} bind:this={el}>
+	<span id={`${feedId}_`}></span>
 	{#each $groupedEntries as { key, entries }}
 		<time>{key}</time>
 		{#each entries as { index, obj }}
-			<Post
-				entry={obj}
-				entryIndex={index}
-				on:setStatus={setStatus}
-				scrollParent={el}
-			/>
+			<Post entry={obj} entryIndex={index} scrollParent={el} />
 		{/each}
 	{/each}
 

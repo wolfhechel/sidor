@@ -16,6 +16,7 @@
     import AudioPlayer from "./AudioPlayer.svelte";
     import Disclosure from "./Disclosure.svelte";
     import YouTubePlayer from "./YouTubePlayer.svelte";
+    import { client } from "$lib/store";
 
     export let entry: Entry;
     export let entryIndex: number;
@@ -48,11 +49,21 @@
     $: scrollMargin = scrollMarginBottom + scrollMarginTop;
 
     let markedAsRead = entry.status != "unread";
+
+    const setStatus = (status: string) => {
+        $client
+            .put<"">(`entries`, {
+                entry_ids: [entry.id],
+                status,
+            })
+            .then(() => {
+                entry.status = status;
+            });
+    };
 </script>
 
 <article
     bind:this={contentElement}
-    class:read={entry.status == "read"}
     id={`${entry.feed.category.id}-${entryIndex}`}
 >
     <header bind:clientHeight={scrollMarginTop}>
@@ -78,10 +89,7 @@
 
                     markedAsRead = true;
 
-                    dispatch("setStatus", {
-                        entry_id: entry.id,
-                        status: "read",
-                    });
+                    setStatus("read");
                 }}
             />
         {/if}
@@ -102,10 +110,7 @@
             <YouTubePlayer
                 url={youTubeVideo.url}
                 on:ended={() => {
-                    dispatch("setStatus", {
-                        entry_id: entry.id,
-                        status: "read",
-                    });
+                    setStatus("read");
                 }}
             />
         </section>
@@ -130,18 +135,35 @@
     </section>
 
     <footer bind:clientHeight={scrollMarginBottom}>
-        <small>Read </small><input
-            type="checkbox"
-            checked={entry.status == "read"}
-            on:change={(e) => {
-                e.currentTarget.indeterminate = false;
+        <label for="read-{entry.id}"
+            >Read <input
+                id="read-{entry.id}"
+                type="checkbox"
+                checked={entry.status == "read"}
+                on:change={(e) => {
+                    e.currentTarget.checked = entry.status == "read";
+                    e.currentTarget.indeterminate = false;
 
-                dispatch("setStatus", {
-                    entry_id: entry.id,
-                    status: entry.status == "read" ? "unread" : "read",
-                });
-            }}
-        />
+                    setStatus(entry.status == "read" ? "unread" : "read");
+                }}
+            /></label
+        >
+
+        <label for="bookmark-{entry.id}"
+            >Bookmark <input
+                id="bookmark-{entry.id}"
+                type="checkbox"
+                checked={entry.starred}
+                on:change={(e) => {
+                    e.currentTarget.checked = entry.starred;
+                    e.currentTarget.indeterminate = false;
+
+                    $client.put(`entries/${entry.id}/bookmark`, {}).then(() => {
+                        entry.starred = !entry.starred;
+                    });
+                }}
+            /></label
+        >
     </footer>
 </article>
 
@@ -159,10 +181,6 @@
         transition: opacity 0.25s ease-in-out;
         -moz-transition: opacity 0.25s ease-in-out;
         -webkit-transition: opacity 0.25s ease-in-out;
-
-        &.read {
-            opacity: 0.4;
-        }
 
         header {
             position: sticky;
@@ -217,7 +235,7 @@
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            gap: 5px;
+            gap: 15px;
         }
     }
 </style>

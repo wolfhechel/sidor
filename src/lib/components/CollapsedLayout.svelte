@@ -22,17 +22,6 @@
 </div>
 
 <style lang="scss">
-    $desktop: 1300px;
-
-    .no-scrollbar {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-
-        &::-webkit-scrollbar {
-            display: none;
-        }
-    }
-
     div#wrapper {
         height: 100%;
         display: flex;

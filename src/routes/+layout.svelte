@@ -56,4 +56,13 @@
 		background-color: var(--depth-1-color);
 		font-size: 16px;
 	}
+
+	:global(*) {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+
+		&::-webkit-scrollbar {
+			display: none;
+		}
+	}
 </style>
