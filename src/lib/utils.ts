@@ -63,6 +63,8 @@ export const groupByTime = <
     objs: T[], 
     key: K
 ): Grouped<T>[] => {
+    let now = Date.now();
+
     return objs.sort(
         (a, b) => {
             return (
@@ -70,7 +72,7 @@ export const groupByTime = <
             );
         }
     ).reduce((groups, obj, index) => {
-        let value: string = dayjs(obj[key]).from(null);
+        let value: string = dayjs(obj[key]).from(now);
 
         let group = groups.find(({ key }) => key == value);
 
