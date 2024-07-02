@@ -59,6 +59,19 @@
                 };
             });
     };
+
+    const getAbsoluteAssetUrl = (baseUrl: string, assetUrl: string): string => {
+        let absoluteUrl: URL;
+
+        try {
+            // Asset might be absolute
+            absoluteUrl = new URL(assetUrl);
+        } catch (error) {
+            absoluteUrl = new URL(assetUrl, new URL(baseUrl));
+        }
+
+        return absoluteUrl.href;
+    };
 </script>
 
 <script lang="ts">
@@ -99,12 +112,16 @@
             <Spinner />
         </div>
     {:then response}
+        {@const urlDomain = domain(url)}
         <a href={url} target="_blank">
             {#if response.image}
-                <img src={response.image} alt={`Shared image from ${url}`} />
+                <img
+                    src={getAbsoluteAssetUrl(url, response.image)}
+                    alt={`Shared image from ${url}`}
+                />
             {/if}
             <div>
-                <span class="secondary">{domain(url)}</span>
+                <span class="secondary">{urlDomain}</span>
                 <span>{response.title}</span>
                 {#if response.description}
                     <span class="secondary">{response.description}</span>

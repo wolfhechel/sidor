@@ -112,7 +112,7 @@
     {:else if previewLink}
         <section class="link-preview">
             <ViewportVisible>
-                <LinkPreview url={entry.url} />
+                <LinkPreview url={previewLink} />
             </ViewportVisible>
         </section>
     {/if}
