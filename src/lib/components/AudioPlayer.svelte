@@ -4,10 +4,11 @@
 </script>
 
 <script lang="ts">
-    import Play from "$lib/icons/Play.svelte";
-    import Pause from "$lib/icons/Pause.svelte";
     import { writable, type Writable } from "svelte/store";
     import type { PointerEventHandler } from "svelte/elements";
+
+    import Play from "virtual:icons/mdi/play";
+    import Pause from "virtual:icons/mdi/pause";
 
     export let src: string;
     export let metadata: MediaMetadata;
