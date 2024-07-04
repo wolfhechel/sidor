@@ -164,6 +164,7 @@
         transition: opacity 0.25s ease-in-out;
         -moz-transition: opacity 0.25s ease-in-out;
         -webkit-transition: opacity 0.25s ease-in-out;
+        contain: layout paint;
 
         header {
             position: sticky;
