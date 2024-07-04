@@ -20,11 +20,8 @@
 
     export let entry: Entry;
     export let entryIndex: number;
-    export let scrollParent: HTMLElement;
 
     let contentElement: HTMLElement;
-    let scrollMarginBottom: number;
-    let scrollMarginTop: number;
 
     $: audio = findEnclosure(entry.enclosures, "audio/");
 
@@ -44,8 +41,6 @@
             ? entry.url
             : findExternalLinks(entry.content).at(0);
 
-    $: scrollMargin = scrollMarginBottom + scrollMarginTop;
-
     const setStatus = (status: string) => {
         $client
             .put<"">(`entries`, {
@@ -62,7 +57,7 @@
     bind:this={contentElement}
     id={`${entry.feed.category.id}-${entryIndex}`}
 >
-    <header bind:clientHeight={scrollMarginTop}>
+    <header>
         <div>
             <address>
                 <Favicon url={entry.url} size="20" /><b>{entry.feed.title}</b>
@@ -76,8 +71,6 @@
         {#if !hasEnclosure}
             <ScrollProgress
                 {contentElement}
-                {scrollParent}
-                bind:marginBottom={scrollMargin}
                 on:completed|once={() => {
                     setStatus("read");
                 }}
@@ -124,7 +117,7 @@
         </div>
     </section>
 
-    <footer bind:clientHeight={scrollMarginBottom}>
+    <footer>
         <label for="read-{entry.id}"
             >Read <input
                 id="read-{entry.id}"

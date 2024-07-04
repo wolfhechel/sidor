@@ -1,35 +1,63 @@
-<script lang="ts">
-    import { onDestroy, onMount, createEventDispatcher } from "svelte";
+<script lang="ts" context="module">
+    export type ScrollProgressStore = Writable<number>;
 
-    export let contentElement: HTMLElement;
-    export let scrollParent: HTMLElement;
-    export let marginBottom: number;
+    const ScrollProgressContext = "ScrollProgress";
 
-    $: progress = 0;
+    /* Must be called outside lifecycle-events as it initialises a context */
+    export const initScrollProgress = (): ScrollProgressStore => {
+        const scrollProgress: Writable<number> = writable();
 
-    const dispatch = createEventDispatcher();
+        setContext(ScrollProgressContext, scrollProgress);
 
-    const onScroll = (ev: Event) => {
-        let scrollTop = (ev.target as HTMLElement).scrollTop;
-        let offsetTop = contentElement.offsetTop;
-        let clientHeight = contentElement.clientHeight;
-
-        let top = Math.max(0, scrollTop - offsetTop); // Amount of scroll on entry
-
-        progress = Math.min(top / (clientHeight - marginBottom), 1) * 100;
-
-        if (progress == 100) {
-            dispatch("completed");
-        }
+        return scrollProgress;
     };
 
-    onMount(() => {
-        scrollParent.addEventListener("scroll", onScroll);
-    });
+    export const scrollProgressParent: Action<
+        HTMLElement,
+        ScrollProgressStore
+    > = (node: HTMLElement, scrollProgress: ScrollProgressStore) => {
+        const onScroll = (ev: Event) => {
+            scrollProgress.set((ev.target as HTMLElement).scrollTop);
+        };
 
-    onDestroy(() => {
-        scrollParent.removeEventListener("scroll", onScroll);
-    });
+        node.addEventListener("scroll", onScroll);
+
+        return {
+            destroy: () => {
+                node.removeEventListener("scroll", onScroll);
+            },
+        };
+    };
+</script>
+
+<script lang="ts">
+    import { createEventDispatcher, setContext, getContext } from "svelte";
+    import type { Action } from "svelte/action";
+    import { writable, type Writable } from "svelte/store";
+
+    export let contentElement: HTMLElement;
+
+    const scrollTop = getContext<Writable<number>>(ScrollProgressContext);
+    const dispatch = createEventDispatcher();
+
+    const calculateProgress = (
+        element: HTMLElement,
+        scrollTop: number,
+    ): number => {
+        let offsetTop = element.offsetTop;
+        let clientHeight = element.clientHeight;
+
+        let progress =
+            Math.min(Math.max(0, scrollTop - offsetTop) / clientHeight, 1) *
+            100;
+
+        return progress;
+    };
+
+    $: progress =
+        contentElement && calculateProgress(contentElement, $scrollTop);
+
+    $: progress == 100 && dispatch("completed");
 </script>
 
 <div>

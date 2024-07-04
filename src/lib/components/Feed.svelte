@@ -9,6 +9,10 @@
 	import { client } from "$lib/store";
 	import { type Entry, type Pagination } from "$lib/api";
 	import { groupByTime, type Grouped } from "$lib/utils";
+	import {
+		initScrollProgress,
+		scrollProgressParent,
+	} from "./ScrollProgress.svelte";
 
 	import Post from "./Post.svelte";
 	import Loader from "./Loader.svelte";
@@ -18,7 +22,7 @@
 	export let feedId: string;
 	export let params: { [key: string]: string | string[] };
 
-	let el: HTMLElement;
+	const scrollProgress = initScrollProgress();
 
 	const limit = 10;
 	const entries: Writable<Entry[]> = writable([]);
@@ -57,12 +61,12 @@
 	};
 </script>
 
-<section id={`${feedId}`} bind:this={el}>
+<section id={`${feedId}`} use:scrollProgressParent={scrollProgress}>
 	<span id={`${feedId}_`}></span>
 	{#each $groupedEntries as { key, entries }}
 		<time>{key}</time>
 		{#each entries as { index, obj }}
-			<Post entry={obj} entryIndex={index} scrollParent={el} />
+			<Post entry={obj} entryIndex={index} />
 		{/each}
 	{/each}
 
