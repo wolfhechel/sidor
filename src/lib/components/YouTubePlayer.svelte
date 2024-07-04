@@ -86,13 +86,11 @@
 
     export let url: string;
 
-    const dispatch = createEventDispatcher();
-
     let videoId: string = parseYouTubeId(url);
-
-    let player;
-
+    let player: YT.Player;
     let el: HTMLElement;
+
+    const dispatch = createEventDispatcher();
 
     const loadMetadata = async (
         videoId: string,

@@ -14,22 +14,20 @@
 	import Loader from "./Loader.svelte";
 	import Finished from "./Finished.svelte";
 
+	export let endpoint: string;
+	export let feedId: string;
+	export let params: { [key: string]: string | string[] };
+
+	let el: HTMLElement;
+
 	const limit = 10;
-
 	const entries: Writable<Entry[]> = writable([]);
-
 	const groupedEntries: Readable<Grouped<Entry>[]> = derived(
 		[entries],
 		([$entries]) => {
 			return groupByTime($entries, "published_at");
 		},
 	);
-
-	export let endpoint: string;
-	export let feedId: string;
-	export let params: { [key: string]: string | string[] };
-
-	let el: HTMLElement;
 
 	$: offset = 0;
 	$: total = Infinity;

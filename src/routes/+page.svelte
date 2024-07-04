@@ -17,8 +17,7 @@
     } from "$lib/components/PagedContainer.svelte";
     import TabList, { type Tab } from "$lib/components/TabList.svelte";
     import CollapsedLayout from "$lib/components/CollapsedLayout.svelte";
-    import CategoryFeed from "$lib/components/CategoryFeed.svelte";
-    import BookmarksFeed from "$lib/components/BookmarksFeed.svelte";
+    import Feed from "$lib/components/Feed.svelte";
 
     const reloadAfter = 10 * 60 * 1000;
 
@@ -27,28 +26,38 @@
     const categories: Writable<Category[]> = writable([]);
 
     type TabbedPage = Page & Tab;
+
     const pages: Readable<TabbedPage[]> = derived(
         [categories],
         ([$categories]) => {
-            let bookmarksPage: TabbedPage = {
-                component: BookmarksFeed,
-                id: 0,
-                title: "★",
-                properties: {},
-            };
-
-            let categoryPages: TabbedPage[] = $categories.map((category) => {
-                return {
-                    component: CategoryFeed,
-                    id: category.id,
-                    title: category.title,
+            return [
+                {
+                    component: Feed,
+                    id: 0,
+                    title: "★",
                     properties: {
-                        category,
+                        endpoint: "entries",
+                        feedId: "0",
+                        params: {
+                            starred: "true",
+                        },
                     },
-                };
-            });
-
-            return [bookmarksPage, ...categoryPages];
+                },
+                ...$categories.map((category) => {
+                    return {
+                        component: Feed,
+                        id: category.id,
+                        title: category.title,
+                        properties: {
+                            endpoint: `categories/${category.id}/entries`,
+                            feedId: category.id.toString(),
+                            params: {
+                                status: ["unread"],
+                            },
+                        },
+                    };
+                }),
+            ] as TabbedPage[];
         },
     );
 

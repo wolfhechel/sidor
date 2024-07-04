@@ -22,7 +22,9 @@
     export let entryIndex: number;
     export let scrollParent: HTMLElement;
 
-    const dispatch = createEventDispatcher();
+    let contentElement: HTMLElement;
+    let scrollMarginBottom: number;
+    let scrollMarginTop: number;
 
     $: audio = findEnclosure(entry.enclosures, "audio/");
 
@@ -42,13 +44,7 @@
             ? entry.url
             : findExternalLinks(entry.content).at(0);
 
-    let contentElement: HTMLElement;
-    let scrollMarginBottom: number;
-    let scrollMarginTop: number;
-
     $: scrollMargin = scrollMarginBottom + scrollMarginTop;
-
-    let markedAsRead = entry.status != "unread";
 
     const setStatus = (status: string) => {
         $client
@@ -82,13 +78,7 @@
                 {contentElement}
                 {scrollParent}
                 bind:marginBottom={scrollMargin}
-                on:completed={() => {
-                    if (markedAsRead) {
-                        return;
-                    }
-
-                    markedAsRead = true;
-
+                on:completed|once={() => {
                     setStatus("read");
                 }}
             />
