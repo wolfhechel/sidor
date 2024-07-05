@@ -3,9 +3,11 @@
     import { createEventDispatcher } from "svelte";
 
     let dispatch = createEventDispatcher();
+
+    export let threshold: number = 1;
 </script>
 
-<div use:inview={{ threshold: 0.2 }} on:inview_enter={() => dispatch("loaded")}>
+<div use:inview={{ threshold }} on:inview_enter={() => dispatch("loaded")}>
     Loading
 </div>
 
