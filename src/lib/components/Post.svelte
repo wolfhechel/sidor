@@ -16,11 +16,14 @@
     import AudioPlayer from "./AudioPlayer.svelte";
     import Disclosure from "./Disclosure.svelte";
     import * as YouTube from "./YouTube";
+    import ChevronDown from "virtual:icons/mdi/chevron-down-circle-outline";
 
     export let entry: Entry;
     export let entryIndex: number;
+    export let feedId: string;
 
     let contentElement: HTMLElement;
+    let footerElement: HTMLElement;
 
     $: audio = findEnclosure(entry.enclosures, "audio/");
 
@@ -40,6 +43,10 @@
             ? entry.url
             : findExternalLinks(entry.content).at(0);
 
+    const constructEntryId = (feedId: string, entryIndex: number): string => {
+        return `entry-${feedId}-${entryIndex}`;
+    };
+
     const setStatus = (status: string) => {
         $client
             .put<"">(`entries`, {
@@ -52,19 +59,28 @@
     };
 </script>
 
-<article
-    bind:this={contentElement}
-    id={`${entry.feed.category.id}-${entryIndex}`}
->
+<article bind:this={contentElement} id={constructEntryId(feedId, entryIndex)}>
     <header>
         <div>
             <address>
                 <Favicon url={entry.url} size="20" /><b>{entry.feed.title}</b>
             </address>
 
-            {#if entry.title}
-                <a target="_blank" href={entry.url}>{entry.title}</a>
-            {/if}
+            <span>
+                <a target="_blank" href={entry.url}
+                    >{entry.title || entry.url}</a
+                >
+
+                <button
+                    on:click={() => {
+                        document
+                            .querySelector(
+                                `#${constructEntryId(feedId, entryIndex + 1)}`,
+                            )
+                            ?.scrollIntoView();
+                    }}><ChevronDown /></button
+                >
+            </span>
         </div>
 
         {#if !hasEnclosure}
@@ -116,7 +132,7 @@
         </div>
     </section>
 
-    <footer>
+    <footer bind:this={footerElement}>
         <label for="read-{entry.id}"
             >Read <input
                 id="read-{entry.id}"
@@ -161,81 +177,96 @@
         -moz-transition: opacity 0.25s ease-in-out;
         -webkit-transition: opacity 0.25s ease-in-out;
         contain: layout paint;
+    }
 
-        header {
-            position: sticky;
-            top: 0;
-            border-bottom: var(--article-border);
-            background-color: var(--depth-1-color);
-            z-index: 2;
+    header {
+        position: sticky;
+        top: 0;
+        border-bottom: var(--article-border);
+        background-color: var(--depth-1-color);
+        z-index: 2;
 
-            div {
-                padding: var(--vertical-spacing) var(--horizontal-spacing);
+        & > div {
+            padding: var(--vertical-spacing) var(--horizontal-spacing);
 
-                address {
-                    display: flex;
-                    font-style: normal;
-                    font-size: 0.8rem;
-                    padding-bottom: 10px;
-                    align-items: center;
-                    gap: 5px;
-                }
+            address {
+                display: flex;
+                font-style: normal;
+                font-size: 0.8rem;
+                padding-bottom: 10px;
+                align-items: center;
+                gap: 5px;
+            }
+
+            span {
+                display: flex;
+                align-items: center;
 
                 a {
                     text-decoration: none;
                     color: var(--text-color);
                     font-weight: bold;
+                    font-size: 1.2em;
+                    flex: 1;
+                }
+
+                button {
+                    background-color: transparent;
+                    border: none;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                 }
             }
         }
+    }
 
-        section {
-            margin-top: var(--vertical-spacing);
-            font-size: 16px;
-            letter-spacing: 0.2px;
-            font-weight: 400;
-            line-height: 1.4;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            gap: var(--vertical-spacing);
+    section {
+        margin-top: var(--vertical-spacing);
+        font-size: 16px;
+        letter-spacing: 0.2px;
+        font-weight: 400;
+        line-height: 1.4;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: var(--vertical-spacing);
 
-            padding: 0 var(--horizontal-spacing);
+        padding: 0 var(--horizontal-spacing);
 
-            &.video {
-                padding: 0;
-                margin: 0;
-            }
-        }
-
-        footer {
-            margin-top: var(--vertical-spacing);
-            padding: var(--vertical-spacing) var(--horizontal-spacing);
-            border-top: var(--article-border);
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 15px;
+        &.video {
+            padding: 0;
+            margin: 0;
         }
     }
 
-    .bookmark {
-        visibility: hidden;
-        font-size: 30px;
-        cursor: pointer;
-        height: 1rem;
-        width: 1rem;
-        font-size: 1rem;
-        line-height: 1rem;
+    footer {
+        margin-top: var(--vertical-spacing);
+        padding: var(--vertical-spacing) var(--horizontal-spacing);
+        border-top: var(--article-border);
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 15px;
 
-        &:before {
-            content: "\2606";
-            position: absolute;
-            visibility: visible;
-        }
+        .bookmark {
+            visibility: hidden;
+            font-size: 30px;
+            cursor: pointer;
+            height: 1rem;
+            width: 1rem;
+            font-size: 1rem;
+            line-height: 1rem;
 
-        &:checked:before {
-            content: "\2605";
+            &:before {
+                content: "\2606";
+                position: absolute;
+                visibility: visible;
+            }
+
+            &:checked:before {
+                content: "\2605";
+            }
         }
     }
 </style>

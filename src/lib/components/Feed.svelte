@@ -66,7 +66,7 @@
 	{#each $groupedEntries as { key, entries }}
 		<time>{key}</time>
 		{#each entries as { index, obj }}
-			<Post entry={obj} entryIndex={index} />
+			<Post entry={obj} entryIndex={index} {feedId} />
 		{/each}
 	{/each}
 
@@ -86,6 +86,7 @@
 		gap: 5px;
 		overflow-y: scroll;
 		background-color: var(--depth-0-color);
+		scroll-behavior: smooth;
 
 		time {
 			padding: 10px 15px;
