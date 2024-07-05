@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
     import {
         domain,
         findEnclosure,
@@ -7,6 +6,7 @@
         removeDomElements,
     } from "$lib/utils";
     import type { Entry } from "$lib/api";
+    import { client } from "$lib/store";
 
     import Favicon from "./Favicon.svelte";
     import LinkPreview from "./LinkPreview.svelte";
@@ -15,8 +15,7 @@
     import ScrollProgress from "./ScrollProgress.svelte";
     import AudioPlayer from "./AudioPlayer.svelte";
     import Disclosure from "./Disclosure.svelte";
-    import YouTubePlayer from "./YouTubePlayer.svelte";
-    import { client } from "$lib/store";
+    import * as YouTube from "./YouTube";
 
     export let entry: Entry;
     export let entryIndex: number;
@@ -90,7 +89,7 @@
         </section>
     {:else if youTubeVideo}
         <section class="video">
-            <YouTubePlayer
+            <YouTube.Player
                 url={youTubeVideo.url}
                 on:ended={() => {
                     setStatus("read");

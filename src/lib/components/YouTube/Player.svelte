@@ -1,64 +1,5 @@
 <script lang="ts" context="module">
-    declare namespace YT {
-        enum PlayerState {
-            UNSTARTED = -1,
-            ENDED,
-            PLAYING,
-            PAUSED,
-            BUFFERING,
-            CUED,
-        }
-
-        type ValueOf<T> = T[keyof T];
-
-        interface PlayerOptions {
-            width: number;
-            height: number;
-            videoId: string;
-            host?: string;
-            playerVars?: {
-                /* https://developers.google.com/youtube/player_parameters */
-                autoplay?: 0 | 1;
-                start?: number;
-            };
-            events?: {
-                onReady?: (event: { target: Player }) => void;
-                onStateChange?: (event: {
-                    data: PlayerState;
-                    target: Player;
-                }) => void;
-            };
-        }
-
-        interface Player {
-            playVideo(): void;
-            pauseVideo(): void;
-            stopVideo(): void;
-            seekTo(seconds: number, allowSeekAhead: boolean): void;
-            getVideoLoadedFraction(): number;
-            getPlayerState(): PlayerState;
-            getCurrentTime(): number;
-            getDuration(): number;
-            getVideoUrl(): string;
-            getVideoEmbedCode(): string;
-            addEventListener(event: string, listener: string | Function): void;
-            removeEventListener(
-                event: string,
-                listener: string | Function,
-            ): void;
-            destroy(): void;
-
-            new (element: HTMLElement | string, options: PlayerOptions): Player;
-        }
-
-        var Player: {
-            prototype: Player;
-            new (
-                element: HTMLElement | string,
-                playerOptions: PlayerOptions,
-            ): Player;
-        };
-    }
+    /// <reference path="YT.d.ts" />
 
     import { writable, type Writable } from "svelte/store";
 
@@ -82,7 +23,7 @@
 
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
-    import YouTubeThumbnail from "./YouTubeThumbnail.svelte";
+    import Thumbnail from "./Thumbnail.svelte";
 
     export let url: string;
 
@@ -168,9 +109,7 @@
     <script src="https://www.youtube.com/iframe_api"></script>
 </svelte:head>
 
-<button on:click={() => load()} bind:this={el}
-    ><YouTubeThumbnail {videoId} /></button
->
+<button on:click={() => load()} bind:this={el}><Thumbnail {videoId} /></button>
 
 <style lang="scss">
     button {
