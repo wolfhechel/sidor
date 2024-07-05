@@ -9,6 +9,7 @@
 	import { client } from "$lib/store";
 	import { type Entry, type Pagination } from "$lib/api";
 	import { groupByTime, type Grouped } from "$lib/utils";
+
 	import {
 		initScrollProgress,
 		scrollProgressParent,
@@ -47,7 +48,7 @@
 
 	const load = (
 		endpoint: string,
-		selectedStatus: string,
+		selectedStatus: string | undefined,
 		starred: boolean,
 	) => {
 		let params: Record<string, string | string[]> = {
@@ -69,6 +70,48 @@
 			offset += limit;
 
 			$entries = $entries.concat(value.entries);
+		});
+	};
+
+	const setEntryStatus = ({
+		detail: { id, status },
+	}: {
+		detail: {
+			id: number;
+			status: string;
+		};
+	}) => {
+		$client
+			.put<"">(`entries`, {
+				entry_ids: [id],
+				status,
+			})
+			.then(() => {
+				let entry = $entries.find((entry) => entry.id == id);
+
+				if (entry) {
+					entry.status = status;
+				}
+
+				$entries = $entries;
+			});
+	};
+
+	const toggleEntryBookmark = ({
+		detail: { id },
+	}: {
+		detail: {
+			id: number;
+		};
+	}) => {
+		$client.put(`entries/${id}/bookmark`, {}).then(() => {
+			let entry = $entries.find((entry) => entry.id == id);
+
+			if (entry) {
+				entry.starred = !entry.starred;
+			}
+
+			$entries = $entries;
 		});
 	};
 </script>
@@ -94,7 +137,13 @@
 	{#each $groupedEntries as { key, entries }}
 		<time>{key}</time>
 		{#each entries as { index, obj }}
-			<Post entry={obj} entryIndex={index} {feedId} />
+			<Post
+				entry={obj}
+				entryIndex={index}
+				{feedId}
+				on:setStatus={setEntryStatus}
+				on:toggleBookmark={toggleEntryBookmark}
+			/>
 		{/each}
 	{/each}
 

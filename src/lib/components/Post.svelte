@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { createEventDispatcher } from "svelte";
+
     import {
         domain,
         findEnclosure,
@@ -6,7 +8,6 @@
         removeDomElements,
     } from "$lib/utils";
     import type { Entry } from "$lib/api";
-    import { client } from "$lib/store";
 
     import Favicon from "./Favicon.svelte";
     import LinkPreview from "./LinkPreview.svelte";
@@ -24,6 +25,8 @@
 
     let contentElement: HTMLElement;
     let footerElement: HTMLElement;
+
+    const dispatch = createEventDispatcher();
 
     $: audio = findEnclosure(entry.enclosures, "audio/");
 
@@ -48,14 +51,16 @@
     };
 
     const setStatus = (status: string) => {
-        $client
-            .put<"">(`entries`, {
-                entry_ids: [entry.id],
-                status,
-            })
-            .then(() => {
-                entry.status = status;
-            });
+        dispatch("setStatus", {
+            id: entry.id,
+            status: status,
+        });
+    };
+
+    const toggleBookmark = () => {
+        dispatch("toggleBookmark", {
+            id: entry.id,
+        });
     };
 </script>
 
@@ -154,9 +159,7 @@
                 e.currentTarget.checked = entry.starred;
                 e.currentTarget.indeterminate = false;
 
-                $client.put(`entries/${entry.id}/bookmark`, {}).then(() => {
-                    entry.starred = !entry.starred;
-                });
+                toggleBookmark();
             }}
         />
     </footer>
