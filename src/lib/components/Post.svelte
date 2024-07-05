@@ -130,22 +130,19 @@
                 }}
             /></label
         >
+        <input
+            class="bookmark"
+            type="checkbox"
+            checked={entry.starred}
+            on:change={(e) => {
+                e.currentTarget.checked = entry.starred;
+                e.currentTarget.indeterminate = false;
 
-        <label for="bookmark-{entry.id}"
-            >Bookmark <input
-                id="bookmark-{entry.id}"
-                type="checkbox"
-                checked={entry.starred}
-                on:change={(e) => {
-                    e.currentTarget.checked = entry.starred;
-                    e.currentTarget.indeterminate = false;
-
-                    $client.put(`entries/${entry.id}/bookmark`, {}).then(() => {
-                        entry.starred = !entry.starred;
-                    });
-                }}
-            /></label
-        >
+                $client.put(`entries/${entry.id}/bookmark`, {}).then(() => {
+                    entry.starred = !entry.starred;
+                });
+            }}
+        />
     </footer>
 </article>
 
@@ -219,6 +216,26 @@
             align-items: center;
             justify-content: flex-end;
             gap: 15px;
+        }
+    }
+
+    .bookmark {
+        visibility: hidden;
+        font-size: 30px;
+        cursor: pointer;
+        height: 1rem;
+        width: 1rem;
+        font-size: 1rem;
+        line-height: 1rem;
+
+        &:before {
+            content: "\2606";
+            position: absolute;
+            visibility: visible;
+        }
+
+        &:checked:before {
+            content: "\2605";
         }
     }
 </style>
