@@ -83,7 +83,7 @@ export class Client {
                     value.forEach((value) => {
                         urlsearch.append(key, value);
                     })
-                } else {
+                } else if (value) {
                     urlsearch.append(key, value);
                 }
             })

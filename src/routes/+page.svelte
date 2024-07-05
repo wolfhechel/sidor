@@ -38,9 +38,7 @@
                     properties: {
                         endpoint: "entries",
                         feedId: "0",
-                        params: {
-                            starred: "true",
-                        },
+                        starred: true,
                     },
                 },
                 ...$categories.map((category) => {
@@ -51,9 +49,7 @@
                         properties: {
                             endpoint: `categories/${category.id}/entries`,
                             feedId: category.id.toString(),
-                            params: {
-                                status: ["unread"],
-                            },
+                            selectedStatus: "unread",
                         },
                     };
                 }),
