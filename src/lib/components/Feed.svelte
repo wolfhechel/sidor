@@ -15,7 +15,7 @@
 		scrollProgressParent,
 	} from "./ScrollProgress.svelte";
 
-	import Post from "./Post.svelte";
+	import Post from "./Post";
 	import Loader from "./Loader.svelte";
 	import Finished from "./Finished.svelte";
 
@@ -104,7 +104,7 @@
 			id: number;
 		};
 	}) => {
-		$client.put(`entries/${id}/bookmark`, {}).then(() => {
+		$client.put(`entries/${id}/bookmark`, {}).catch(() => {
 			let entry = $entries.find((entry) => entry.id == id);
 
 			if (entry) {

@@ -9,22 +9,22 @@
     } from "$lib/utils";
     import type { Entry } from "$lib/api";
 
-    import Favicon from "./Favicon.svelte";
-    import LinkPreview from "./LinkPreview.svelte";
-    import ViewportVisible from "./ViewportVisible.svelte";
-    import RenderHtml from "./RenderHtml.svelte";
-    import ScrollProgress from "./ScrollProgress.svelte";
-    import AudioPlayer from "./AudioPlayer.svelte";
-    import Disclosure from "./Disclosure.svelte";
-    import * as YouTube from "./YouTube";
+    import Favicon from "../Favicon.svelte";
+    import LinkPreview from "../LinkPreview.svelte";
+    import ViewportVisible from "../ViewportVisible.svelte";
+    import RenderHtml from "../RenderHtml.svelte";
+    import ScrollProgress from "../ScrollProgress.svelte";
+    import AudioPlayer from "../AudioPlayer.svelte";
+    import Disclosure from "../Disclosure.svelte";
+    import * as YouTube from "../YouTube";
     import ChevronDown from "virtual:icons/mdi/chevron-down-circle-outline";
+    import Bookmark from "./Bookmark.svelte";
 
     export let entry: Entry;
     export let entryIndex: number;
     export let feedId: string;
 
     let contentElement: HTMLElement;
-    let footerElement: HTMLElement;
 
     const dispatch = createEventDispatcher();
 
@@ -137,31 +137,18 @@
         </div>
     </section>
 
-    <footer bind:this={footerElement}>
+    <footer>
         <label for="read-{entry.id}"
             >Read <input
                 id="read-{entry.id}"
                 type="checkbox"
                 checked={entry.status == "read"}
                 on:change={(e) => {
-                    e.currentTarget.checked = entry.status == "read";
-                    e.currentTarget.indeterminate = false;
-
                     setStatus(entry.status == "read" ? "unread" : "read");
                 }}
             /></label
         >
-        <input
-            class="bookmark"
-            type="checkbox"
-            checked={entry.starred}
-            on:change={(e) => {
-                e.currentTarget.checked = entry.starred;
-                e.currentTarget.indeterminate = false;
-
-                toggleBookmark();
-            }}
-        />
+        <Bookmark bind:checked={entry.starred} on:change={toggleBookmark} />
     </footer>
 </article>
 
@@ -251,25 +238,5 @@
         align-items: center;
         justify-content: flex-end;
         gap: 15px;
-
-        .bookmark {
-            visibility: hidden;
-            font-size: 30px;
-            cursor: pointer;
-            height: 1rem;
-            width: 1rem;
-            font-size: 1rem;
-            line-height: 1rem;
-
-            &:before {
-                content: "\2606";
-                position: absolute;
-                visibility: visible;
-            }
-
-            &:checked:before {
-                content: "\2605";
-            }
-        }
     }
 </style>
