@@ -19,7 +19,7 @@
     import Disclosure from "./Disclosure.svelte";
     import Bookmark from "./Bookmark.svelte";
     import * as YouTube from "./YouTube";
-    import ChevronDown from "virtual:icons/mdi/chevron-down-circle-outline";
+    import Icon from "@iconify/svelte";
 
     export let entry: Entry;
     export let entryIndex: number;
@@ -84,7 +84,12 @@
                                 `#${constructEntryId(feedId, entryIndex + 1)}`,
                             )
                             ?.scrollIntoView();
-                    }}><ChevronDown /></button
+                    }}
+                    ><Icon
+                        icon="mdi:chevron-down-circle-outline"
+                        width="1.25em"
+                        height="1.25em"
+                    /></button
                 >
             </span>
         </div>

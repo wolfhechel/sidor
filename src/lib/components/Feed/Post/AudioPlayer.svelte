@@ -7,8 +7,7 @@
     import { writable, type Writable } from "svelte/store";
     import type { PointerEventHandler } from "svelte/elements";
 
-    import Play from "virtual:icons/mdi/play";
-    import Pause from "virtual:icons/mdi/pause";
+    import Icon from "@iconify/svelte";
 
     export let src: string;
     export let metadata: MediaMetadata;
@@ -85,11 +84,11 @@
         aria-label={paused ? "play" : "pause"}
         on:click={() => (paused = !paused)}
     >
-        {#if paused}
-            <Play />
-        {:else}
-            <Pause />
-        {/if}
+        <Icon
+            icon={paused ? "mdi:play" : "mdi:pause"}
+            width="1.25em"
+            height="1.25em"
+        />
     </button>
 
     <div class="info">
