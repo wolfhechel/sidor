@@ -17,7 +17,7 @@
     } from "$lib/components/PagedContainer.svelte";
     import TabList, { type Tab } from "$lib/components/TabList.svelte";
     import CollapsedLayout from "$lib/components/CollapsedLayout.svelte";
-    import Feed from "$lib/components/Feed.svelte";
+    import Feed from "$lib/components/Feed";
 
     const reloadAfter = 10 * 60 * 1000;
 

@@ -7,18 +7,19 @@
         findExternalLinks,
         removeDomElements,
     } from "$lib/utils";
+
     import type { Entry } from "$lib/api";
 
-    import Favicon from "../Favicon.svelte";
-    import LinkPreview from "../LinkPreview.svelte";
-    import ViewportVisible from "../ViewportVisible.svelte";
-    import RenderHtml from "../RenderHtml.svelte";
-    import ScrollProgress from "../ScrollProgress.svelte";
-    import AudioPlayer from "../AudioPlayer.svelte";
-    import Disclosure from "../Disclosure.svelte";
-    import * as YouTube from "../YouTube";
-    import ChevronDown from "virtual:icons/mdi/chevron-down-circle-outline";
+    import Favicon from "./Favicon.svelte";
+    import LinkPreview from "./LinkPreview";
+    import ViewportVisible from "../../ViewportVisible.svelte";
+    import RenderHtml from "./RenderHtml.svelte";
+    import ScrollProgress from "./ScrollProgress.svelte";
+    import AudioPlayer from "./AudioPlayer.svelte";
+    import Disclosure from "./Disclosure.svelte";
     import Bookmark from "./Bookmark.svelte";
+    import * as YouTube from "./YouTube";
+    import ChevronDown from "virtual:icons/mdi/chevron-down-circle-outline";
 
     export let entry: Entry;
     export let entryIndex: number;

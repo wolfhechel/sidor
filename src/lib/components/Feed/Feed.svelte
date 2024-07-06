@@ -10,12 +10,8 @@
 	import { type Entry, type Pagination } from "$lib/api";
 	import { groupByTime, type Grouped } from "$lib/utils";
 
-	import {
-		initScrollProgress,
-		scrollProgressParent,
-	} from "./ScrollProgress.svelte";
+	import { Post, initScrollProgress, scrollProgressParent } from "./Post";
 
-	import Post from "./Post";
 	import Loader from "./Loader.svelte";
 	import Finished from "./Finished.svelte";
 
