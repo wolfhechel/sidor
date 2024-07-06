@@ -1,33 +1,43 @@
 {
-	"name": "bladet",
-	"version": "0.0.1",
-	"scripts": {
-		"dev": "vite dev",
-		"build": "vite build",
-		"preview": "vite preview",
-		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
-	},
-	"devDependencies": {
-		"@iconify-json/mdi": "^1.1.67",
-		"@sveltejs/adapter-static": "^3.0.1",
-		"@sveltejs/kit": "^2.5.0",
-		"@sveltejs/vite-plugin-svelte": "^3.0.0",
-		"dayjs": "^1.11.10",
-		"normalize.css": "^8.0.1",
-		"sass": "^1.70.0",
-		"slugify": "^1.6.6",
-		"svelte": "^4.2.10",
-		"svelte-check": "^3.6.4",
-		"svelte-inview": "^4.0.2",
-		"svelte-persisted-store": "^0.11.0",
-		"svelte-time": "^0.8.2",
-		"tslib": "^2.6.2",
-		"typescript": "^5.3.3",
-		"vite": "^5.1.1"
-	},
-	"type": "module",
-	"dependencies": {
-		"@iconify/svelte": "^4.0.2"
-	}
+  "name": "bladet",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "devDependencies": {
+    "@iconify-json/mdi": "^1.1.67",
+    "@iconify/svelte": "^4.0.2",
+    "@storybook/addon-essentials": "^8.1.11",
+    "@storybook/addon-interactions": "^8.1.11",
+    "@storybook/addon-links": "^8.1.11",
+    "@storybook/blocks": "^8.1.11",
+    "@storybook/svelte": "^8.1.11",
+    "@storybook/sveltekit": "^8.1.11",
+    "@storybook/testing-library": "^0.2.2",
+    "@sveltejs/adapter-static": "^3.0.1",
+    "@sveltejs/kit": "^2.5.0",
+    "@sveltejs/vite-plugin-svelte": "^3.0.0",
+    "dayjs": "^1.11.10",
+    "normalize.css": "^8.0.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sass": "^1.70.0",
+    "slugify": "^1.6.6",
+    "storybook": "^8.1.11",
+    "svelte": "^4.2.10",
+    "svelte-check": "^3.6.4",
+    "svelte-inview": "^4.0.2",
+    "svelte-persisted-store": "^0.11.0",
+    "svelte-time": "^0.8.2",
+    "tslib": "^2.6.2",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.1"
+  },
+  "type": "module"
 }
