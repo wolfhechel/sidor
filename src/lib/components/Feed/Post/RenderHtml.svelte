@@ -40,7 +40,7 @@
 
         :global(figcaption) {
             text-align: center;
-            font-size: 0, 8125rem;
+            font-size: 0.8125rem;
             line-height: 1.375rem;
         }
 
