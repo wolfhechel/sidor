@@ -149,6 +149,8 @@
         margin-block-end: 1em;
 
         a {
+            display: flex;
+            flex-direction: column;
             text-decoration: none;
             width: 100%;
         }
