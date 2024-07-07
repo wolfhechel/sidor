@@ -15,8 +15,7 @@
     div {
         text-align: center;
         font-weight: bold;
-        padding: 15px;
-        font-size: 1.25rem;
+        padding: 16px;
         color: var(--secondary-text-color);
     }
 </style>

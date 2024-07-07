@@ -38,14 +38,14 @@
         display: flex;
         min-height: 100%;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
         justify-content: center;
-        padding: 15px;
+        padding: 16px;
         --color: var(--secondary-text-color);
     }
 
     svg {
-        width: 25px;
+        width: 32px;
         display: block;
     }
 
@@ -74,7 +74,8 @@
     span {
         color: var(--color);
         font-weight: bold;
-        font-size: 1.25rem;
+        font-size: 1.1875rem;
+        line-height: 1.375rem;
     }
 
     @-webkit-keyframes dash {
