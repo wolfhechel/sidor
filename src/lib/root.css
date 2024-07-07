@@ -16,15 +16,18 @@ body {
     --nord14: #a3be8c;
     --nord15: #b48ead;
 
+    --red-color: var(--nord11);
+    --green-color: var(--nord14);
+    
     --error-color: var(--nord11);
-
+        
     --border-color: #f0e9e9;
     --primary-color: #f65e1c;
     --content-size: 600px;
     --button-hover-color: rgb(243, 243, 248);
     --text-secondary: rgb(84, 86, 100);
     --depth-0-color: #f1f1f1;
-    --depth-1-color: #fffafa;
+    --depth-1-color: #ffffff;
     --text-color: #313131;
     --secondary-text-color: #536471;
 
@@ -41,6 +44,7 @@ body {
         "Helvetica Neue",
         sans-serif;
 
+    font-size: 16px;
     color: var(--text-color);
 }
 
@@ -48,6 +52,7 @@ html, body {
     height: 100%;
     background-color: var(--depth-1-color);
     font-size: 16px;
+    line-height: 24px;
 }
 
 * {

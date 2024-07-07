@@ -17,9 +17,12 @@
     input[type="checkbox"] {
         display: none;
     }
+
     label {
-        font-size: 1em;
-        line-height: 1em;
+        font-size: 1.5rem;
+        line-height: 2rem;
+        font-weight: 300;
+        color: var(--text-color);
     }
 
     span::before {

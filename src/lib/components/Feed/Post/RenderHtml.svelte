@@ -8,6 +8,9 @@
 
 <style lang="scss">
     div {
+        font-size: 1rem;
+        line-height: 1.375rem;
+        max-width: 70ch;
         word-break: break-word;
 
         :global(table) {

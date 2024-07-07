@@ -12,8 +12,10 @@
 
 	import { Post, initScrollProgress, scrollProgressParent } from "./Post";
 
+	import StatusMenu from "./StatusMenu.svelte";
 	import Loader from "./Loader.svelte";
 	import Finished from "./Finished.svelte";
+	import GroupLabel from "./GroupLabel.svelte";
 
 	export let endpoint: string;
 	export let feedId: string;
@@ -114,24 +116,11 @@
 
 <section id={`${feedId}`} use:scrollProgressParent={scrollProgress}>
 	{#if selectedStatus}
-		<menu id={`${feedId}_`}>
-			{#each [["unread", "Unread"], ["read", "Read"], ["removed", "Deleted"]] as [status, label]}
-				<li>
-					<label>
-						<input
-							type="radio"
-							bind:group={selectedStatus}
-							value={status}
-						/>
-						{label}
-					</label>
-				</li>
-			{/each}
-		</menu>
+		<StatusMenu bind:selectedStatus />
 	{/if}
 
 	{#each $groupedEntries as { key, entries }}
-		<time>{key}</time>
+		<GroupLabel label={key} />
 		{#each entries as { index, obj }}
 			<Post
 				entry={obj}
@@ -160,48 +149,5 @@
 		overflow-y: scroll;
 		background-color: var(--depth-0-color);
 		scroll-behavior: smooth;
-
-		menu {
-			padding: 0;
-			margin: 0;
-			display: flex;
-			background-color: var(--depth-1-color);
-
-			li {
-				list-style-type: none;
-				flex: 1;
-
-				label {
-					display: block;
-					white-space: nowrap;
-					color: var(--text-color);
-					text-decoration: none;
-					text-align: center;
-					letter-spacing: 0.25px;
-					border-bottom: 2px solid transparent;
-					padding: 5px 15px;
-
-					&:hover {
-						background-color: var(--button-hover-color);
-					}
-
-					&:has(input:checked) {
-						border-color: var(--primary-color);
-					}
-
-					input {
-						visibility: hidden;
-						appearance: none;
-					}
-				}
-			}
-		}
-
-		time {
-			padding: 10px 15px;
-			font-weight: bold;
-			font-size: 0.8rem;
-			color: var(--secondary-text-color);
-		}
 	}
 </style>

@@ -113,6 +113,8 @@
         gap: 1em;
         transition: filter 0.2s;
         user-select: none;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
     }
 
     .player:not(.paused) {
@@ -123,13 +125,12 @@
     button {
         width: 100%;
         aspect-ratio: 1;
-        background-repeat: no-repeat;
-        background-position: 50% 50%;
         border-radius: 50%;
         background-color: var(--primary-color);
         display: flex;
         align-items: center;
         justify-content: center;
+        border: none;
     }
 
     .info {

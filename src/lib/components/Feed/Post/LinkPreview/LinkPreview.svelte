@@ -145,6 +145,8 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
 
         a {
             text-decoration: none;
@@ -161,8 +163,8 @@
         div {
             display: flex;
             flex-direction: column;
-            padding: 0.75rem;
-            gap: 0.25rem;
+            padding: 16px;
+            gap: 8px;
 
             span {
                 color: var(--text-color);

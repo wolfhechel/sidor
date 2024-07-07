@@ -20,6 +20,7 @@
     import Bookmark from "./Bookmark.svelte";
     import * as YouTube from "./YouTube";
     import Icon from "@iconify/svelte";
+    import StatusMarker from "./StatusMarker.svelte";
 
     export let entry: Entry;
     export let entryIndex: number;
@@ -86,9 +87,9 @@
                             ?.scrollIntoView();
                     }}
                     ><Icon
-                        icon="mdi:chevron-down-circle-outline"
-                        width="1.25em"
-                        height="1.25em"
+                        icon="mdi:chevron-down"
+                        width="2rem"
+                        height="2rem"
                     /></button
                 >
             </span>
@@ -144,24 +145,16 @@
     </section>
 
     <footer>
-        <label for="read-{entry.id}"
-            >Read <input
-                id="read-{entry.id}"
-                type="checkbox"
-                checked={entry.status == "read"}
-                on:change={(e) => {
-                    setStatus(entry.status == "read" ? "unread" : "read");
-                }}
-            /></label
-        >
+        <span />
         <Bookmark bind:checked={entry.starred} on:change={toggleBookmark} />
+        <StatusMarker bind:status={entry.status} />
     </footer>
 </article>
 
 <style lang="scss">
     article {
-        --horizontal-spacing: 15px;
-        --vertical-spacing: 10px;
+        --horizontal-spacing: 16px;
+        --vertical-spacing: 8px;
         --article-border: 1px solid #0000000f;
 
         display: flex;
@@ -183,51 +176,47 @@
         z-index: 2;
 
         & > div {
-            padding: var(--vertical-spacing) var(--horizontal-spacing);
+            padding: 16px 16px 14px 16px;
 
             address {
                 display: flex;
                 font-style: normal;
-                font-size: 0.8rem;
-                padding-bottom: 10px;
+                padding-bottom: 8px;
                 align-items: center;
-                gap: 5px;
+                gap: 8px;
             }
 
             span {
-                display: flex;
-                align-items: center;
+                display: grid;
+                grid-template-columns: repeat(12, 1fr);
+                grid-column-gap: 16px;
 
                 a {
+                    display: block;
                     text-decoration: none;
                     color: var(--text-color);
                     font-weight: bold;
-                    font-size: 1.2em;
-                    flex: 1;
+                    grid-column: 1 / span 11;
+                    font-size: 1.1875rem;
+                    line-height: 1.375rem;
                 }
 
                 button {
+                    padding: 0;
                     background-color: transparent;
                     border: none;
                     display: flex;
-                    align-items: center;
                     justify-content: center;
+                    align-items: center;
                 }
             }
         }
     }
 
     section {
-        margin-top: var(--vertical-spacing);
-        font-size: 16px;
-        letter-spacing: 0.2px;
-        font-weight: 400;
-        line-height: 1.4;
         position: relative;
         display: flex;
         flex-direction: column;
-        gap: var(--vertical-spacing);
-
         padding: 0 var(--horizontal-spacing);
 
         &.video {
@@ -240,9 +229,13 @@
         margin-top: var(--vertical-spacing);
         padding: var(--vertical-spacing) var(--horizontal-spacing);
         border-top: var(--article-border);
-        display: flex;
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        grid-column-gap: 16px;
         align-items: center;
-        justify-content: flex-end;
-        gap: 15px;
+
+        span {
+            grid-column: 1 / 11;
+        }
     }
 </style>

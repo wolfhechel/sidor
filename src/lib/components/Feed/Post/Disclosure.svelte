@@ -8,6 +8,10 @@
 </details>
 
 <style lang="scss">
+    details {
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+    }
     summary {
         cursor: pointer;
     }
