@@ -145,7 +145,7 @@
 		width: 100%;
 		display: flex;
 		flex-direction: column;
-		gap: 5px;
+		gap: 8px;
 		overflow-y: scroll;
 		background-color: var(--depth-0-color);
 		scroll-behavior: smooth;
