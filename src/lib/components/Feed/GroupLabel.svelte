@@ -6,9 +6,10 @@
 
 <style lang="scss">
     time {
-        padding: 10px 15px;
+        padding: 8px 16px;
         font-weight: bold;
-        font-size: 0.8rem;
+        font-size: 0.8125rem;
+        line-height: 1.375rem;
         color: var(--secondary-text-color);
     }
 </style>

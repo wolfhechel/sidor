@@ -164,7 +164,7 @@
             display: flex;
             flex-direction: column;
             padding: 16px;
-            gap: 8px;
+            gap: 4px;
 
             span {
                 color: var(--text-color);

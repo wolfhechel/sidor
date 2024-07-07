@@ -46,9 +46,9 @@
                 text-decoration: none;
                 font-weight: 700;
                 text-align: center;
-                letter-spacing: 0.25px;
+                letter-spacing: 1px;
+                padding: 0 16px;
                 border-bottom: 2px solid transparent;
-                padding: 0 15px;
 
                 &:hover {
                     background-color: var(--button-hover-color);
@@ -69,9 +69,10 @@
                 flex: none;
 
                 a {
-                    padding: 10px;
+                    padding: 16px;
                     justify-content: flex-start;
                     border-left: 2px solid transparent;
+                    padding-left: 14px;
                     border-bottom: 0;
                 }
             }

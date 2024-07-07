@@ -2,9 +2,9 @@
     export let selectedStatus: string;
 
     const options = [
-        ["unread", "Unread"], 
+        ["unread", "Unread"],
         ["read", "Read"],
-        ["removed", "Deleted"]
+        ["removed", "Deleted"],
     ];
 </script>
 
@@ -41,8 +41,9 @@
                 text-decoration: none;
                 text-align: center;
                 letter-spacing: 0.25px;
+                padding: 8px 16px;
                 border-bottom: 2px solid transparent;
-                padding: 5px 15px;
+                padding-bottom: 6px;
 
                 &:hover {
                     background-color: var(--button-hover-color);

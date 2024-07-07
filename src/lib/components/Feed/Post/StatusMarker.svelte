@@ -64,6 +64,7 @@
     }
 
     div {
+        justify-self: center;
         border: 2px solid var(--green-color);
         border-radius: 50%;
         position: relative;

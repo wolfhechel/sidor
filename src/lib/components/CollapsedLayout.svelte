@@ -10,9 +10,11 @@
         <aside>
             <input type="checkbox" id={`toggle-context`} />
             <label for={`toggle-context`}>
-                <span></span>
-                <span></span>
-                <span></span>
+                <div>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </label>
             <div>
                 <slot name="aside" />
@@ -34,7 +36,7 @@
         display: flex;
         z-index: 2;
         container: navigation-bar / size;
-        height: 40px;
+        height: 48px;
     }
 
     main {
@@ -52,31 +54,35 @@
         height: 100%;
         aspect-ratio: 1 / 1;
 
-        input {
+        & > input {
             display: none;
         }
 
-        div {
+        & > div {
             display: none;
         }
 
         label {
             display: flex;
             height: 100%;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            gap: 5px;
-            padding: 0 10px;
 
-            span {
-                border-top: 1px solid var(--text-color);
-                border-bottom: 1px solid var(--text-color);
-                width: 20px;
+            div {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                gap: 8px;
+                padding: 8px;
 
-                transform-origin: left center;
-                transform: rotate(0deg);
-                transition: 0.2s ease-in-out;
+                span {
+                    border-top: 1px solid var(--text-color);
+                    border-bottom: 1px solid var(--text-color);
+                    width: 32px;
+
+                    transform-origin: left center;
+                    transform: rotate(0deg);
+                    transition: 0.2s ease-in-out;
+                }
             }
         }
 
@@ -84,9 +90,9 @@
             & label {
                 background-color: var(--button-hover-color);
 
-                span {
+                div > span {
                     &:nth-child(1) {
-                        transform: translate(3px, 0) rotate(45deg);
+                        transform: translate(6px, 0) rotate(45deg);
                     }
 
                     &:nth-child(2) {
@@ -95,7 +101,7 @@
                     }
 
                     &:nth-child(3) {
-                        transform: translate(3px, 0) rotate(-45deg);
+                        transform: translate(6px, 2px) rotate(-45deg);
                     }
                 }
             }
@@ -117,7 +123,7 @@
             flex-direction: row;
             width: 100%;
             max-width: unset;
-            gap: 5px;
+            gap: 8px;
         }
 
         div#navigation {
@@ -131,7 +137,7 @@
 
         nav,
         aside {
-            padding-top: 60px;
+            padding-top: 64px;
         }
 
         nav {

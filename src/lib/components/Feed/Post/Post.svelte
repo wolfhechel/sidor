@@ -70,7 +70,9 @@
     <header>
         <div>
             <address>
-                <Favicon url={entry.url} size="20" /><b>{entry.feed.title}</b>
+                <Favicon url={entry.url} size="20" /><span
+                    >{entry.feed.title}</span
+                >
             </address>
 
             <span>
@@ -88,8 +90,8 @@
                     }}
                     ><Icon
                         icon="mdi:chevron-down"
-                        width="2rem"
-                        height="2rem"
+                        width="1.5rem"
+                        height="1.5rem"
                     /></button
                 >
             </span>
@@ -186,13 +188,14 @@
                 gap: 8px;
             }
 
-            span {
+            & > span {
                 display: grid;
                 grid-template-columns: repeat(12, 1fr);
                 grid-column-gap: 16px;
 
                 a {
-                    display: block;
+                    display: flex;
+                    align-items: center;
                     text-decoration: none;
                     color: var(--text-color);
                     font-weight: bold;
@@ -233,6 +236,7 @@
         grid-template-columns: repeat(12, 1fr);
         grid-column-gap: 16px;
         align-items: center;
+        justify-content: center;
 
         span {
             grid-column: 1 / 11;

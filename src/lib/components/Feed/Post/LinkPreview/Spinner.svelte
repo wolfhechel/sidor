@@ -2,10 +2,10 @@
 
 <style lang="scss">
   div {
-    width: 50px;
+    width: 36px;
     aspect-ratio: 1;
     border-radius: 50%;
-    border: 4px solid #514b82;
+    border: 4px solid var(--primary-color);
     animation:
       l20-1 0.8s infinite linear alternate,
       l20-2 1.6s infinite linear;

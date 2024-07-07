@@ -17,7 +17,7 @@ body {
     --nord15: #b48ead;
 
     --red-color: var(--nord11);
-    --green-color: var(--nord14);
+    --green-color: hsl(90 50% 50% / 1);
     
     --error-color: var(--nord11);
         
