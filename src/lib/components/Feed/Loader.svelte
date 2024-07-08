@@ -4,7 +4,7 @@
 
     let dispatch = createEventDispatcher();
 
-    export let threshold: number = 1;
+    export let threshold: number = 0.8;
 </script>
 
 <div use:inview={{ threshold }} on:inview_enter={() => dispatch("loaded")}>

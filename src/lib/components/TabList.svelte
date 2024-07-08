@@ -14,10 +14,7 @@
     {#each tabs as tab}
         {@const isCurrent = currentTab == tab.id}
         <li>
-            <a
-                href={isCurrent ? `#${tab.id}_` : `#${tab.id}`}
-                aria-current={isCurrent ? "page" : undefined}
-            >
+            <a href="#{tab.id}" aria-current={isCurrent ? "page" : undefined}>
                 <span>{tab.title}</span></a
             >
         </li>
