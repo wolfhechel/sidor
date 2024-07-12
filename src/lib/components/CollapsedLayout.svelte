@@ -132,6 +132,7 @@
 
         main {
             width: 100%;
+            max-width: 75ch;
             order: 1;
         }
 
