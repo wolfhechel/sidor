@@ -107,4 +107,5 @@
             window.location.hash = `#${e.detail}`;
         }}
     />
+    <div slot="aside">test</div>
 </CollapsedLayout>

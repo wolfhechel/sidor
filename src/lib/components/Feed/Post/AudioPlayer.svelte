@@ -57,7 +57,7 @@
     };
 </script>
 
-<div class="player" class:paused>
+<div class="flex flex-row items-center gap-4 select-none my-4">
     <audio
         {src}
         bind:currentTime={time}
@@ -80,7 +80,7 @@
     ></audio>
 
     <button
-        class="play"
+        class="w-10 aspect-square flex items-center justify-center rounded-full bg-accent text-white"
         aria-label={paused ? "play" : "pause"}
         on:click={() => (paused = !paused)}
     >
@@ -91,74 +91,17 @@
         />
     </button>
 
-    <div class="info">
-        <div class="time">
-            <span>{format(time)}</span>
-            <div class="slider" on:pointerdown={progressTrack}>
-                <div
-                    class="progress"
-                    style="--progress: {time / duration}%"
-                ></div>
-            </div>
-            <span>{duration ? format(duration) : "--:--"}</span>
+    <div class="flex-1 flex items-center gap-2">
+        <span class="text-sm">{format(time)}</span>
+        <div
+            class="grow h-2 bg-border rounded-lg overflow-hidden touch-none"
+            on:pointerdown={progressTrack}
+        >
+            <div
+                class="h-full bg-accent"
+                style:width="{(time / duration) * 100}%"
+            ></div>
         </div>
+        <span class="text-sm">{duration ? format(duration) : "--:--"}</span>
     </div>
 </div>
-
-<style>
-    .player {
-        display: grid;
-        grid-template-columns: 2.5em 1fr;
-        align-items: center;
-        gap: 1em;
-        transition: filter 0.2s;
-        user-select: none;
-        margin-block-start: 1em;
-        margin-block-end: 1em;
-    }
-
-    .player:not(.paused) {
-        color: var(--fg-1);
-        filter: drop-shadow(0.5em 0.5em 1em rgba(0, 0, 0, 0.1));
-    }
-
-    button {
-        width: 100%;
-        aspect-ratio: 1;
-        border-radius: 50%;
-        background-color: var(--primary-color);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: none;
-    }
-
-    .info {
-        overflow: hidden;
-    }
-
-    .time {
-        display: flex;
-        align-items: center;
-        gap: 0.5em;
-    }
-
-    .time span {
-        font-size: 0.7em;
-    }
-
-    .slider {
-        flex: 1;
-        height: 0.5em;
-        background: var(--border-color);
-        border-radius: 0.5em;
-        overflow: hidden;
-        touch-action: none;
-    }
-
-    .progress {
-        width: calc(100 * var(--progress));
-        height: 100%;
-        background: var(--primary-color);
-    }
-</style>

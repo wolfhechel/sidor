@@ -106,75 +106,36 @@
     };
 </script>
 
-<aside>
+<aside
+    class="shadow-lg rounded-lg overflow-hidden border border-border flex flex-col justify-center items-center my-4"
+>
     {#await load(url)}
-        <div class="spinner">
+        <div class="flex flex-col p-4 gap-1">
             <Spinner />
         </div>
     {:then response}
         {@const urlDomain = domain(url)}
-        <a href={url} target="_blank">
+        <a class="flex flex-col no-underline w-full" href={url} target="_blank">
             {#if response.image}
                 <img
+                    class="w-full h-[250px] object-cover object-center"
                     src={getAbsoluteAssetUrl(url, response.image)}
                     alt={`Shared image from ${url}`}
                 />
             {/if}
-            <div>
-                <span class="secondary">{urlDomain}</span>
+            <div class="flex flex-col p-4 gap-1">
+                <span class="text-fg-secondary">{urlDomain}</span>
                 <span>{response.title}</span>
                 {#if response.description}
-                    <span class="secondary">{response.description}</span>
+                    <span class="text-fg-secondary">{response.description}</span
+                    >
                 {/if}
             </div>
         </a>
     {:catch error}
-        <div>
+        <div class="flex flex-col p-4 gap-1">
             <span>Failed to load link preview</span>
-            <span class="secondary">{error}</span>
+            <span class="text-fg-secondary">{error}</span>
         </div>
     {/await}
 </aside>
-
-<style lang="scss">
-    aside {
-        border: 1px solid #d1d5db;
-        border-radius: 10px;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        margin-block-start: 1em;
-        margin-block-end: 1em;
-
-        a {
-            display: flex;
-            flex-direction: column;
-            text-decoration: none;
-            width: 100%;
-        }
-
-        img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            object-position: center;
-        }
-
-        div {
-            display: flex;
-            flex-direction: column;
-            padding: 16px;
-            gap: 4px;
-
-            span {
-                color: var(--text-color);
-
-                &.secondary {
-                    color: var(--secondary-text-color);
-                }
-            }
-        }
-    }
-</style>

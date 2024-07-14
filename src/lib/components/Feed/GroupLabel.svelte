@@ -2,14 +2,4 @@
     export let label: string;
 </script>
 
-<time>{label}</time>
-
-<style lang="scss">
-    time {
-        padding: 8px 16px;
-        font-weight: bold;
-        font-size: 0.8125rem;
-        line-height: 1.375rem;
-        color: var(--secondary-text-color);
-    }
-</style>
+<time class="px-2 py-4 font-bold text-sm text-fg-secondary">{label}</time>

@@ -66,21 +66,28 @@
     };
 </script>
 
-<article bind:this={contentElement} id={constructEntryId(feedId, entryIndex)}>
-    <header>
-        <div>
-            <address>
+<article
+    bind:this={contentElement}
+    id={constructEntryId(feedId, entryIndex)}
+    class="flex flex-col bg-white contain-layout contain-paint shadow-md"
+>
+    <header class="sticky top-0 border-b bg-white z-10">
+        <div class="p-4">
+            <address class="flex pb-2 items-center gap-2">
                 <Favicon url={entry.url} size="20" /><span
                     >{entry.feed.title}</span
                 >
             </address>
 
-            <span>
-                <a target="_blank" href={entry.url}
-                    >{entry.title || entry.url}</a
+            <span class="grid grid-cols-12 gap-x-4">
+                <a
+                    class="flex items-center font-bold col-span-11 text-md"
+                    target="_blank"
+                    href={entry.url}>{entry.title || entry.url}</a
                 >
 
                 <button
+                    class="flex justify-center items-center"
                     on:click={() => {
                         document
                             .querySelector(
@@ -108,7 +115,7 @@
     </header>
 
     {#if audio}
-        <section class="audio">
+        <section class="relative flex flex-col px-4">
             <AudioPlayer
                 src={audio.url}
                 metadata={new MediaMetadata({
@@ -118,7 +125,7 @@
             />
         </section>
     {:else if youTubeVideo}
-        <section class="video">
+        <section class="relative flex flex-col">
             <YouTube.Player
                 url={youTubeVideo.url}
                 on:ended={() => {
@@ -127,119 +134,28 @@
             />
         </section>
     {:else if previewLink}
-        <section class="link-preview">
+        <section class="relative flex flex-col px-4">
             <ViewportVisible>
                 <LinkPreview url={previewLink} />
             </ViewportVisible>
         </section>
     {/if}
 
-    <section class="text">
-        <div class="padd">
-            {#if hasEnclosure}
-                <Disclosure summary="Description">
-                    <RenderHtml {html} />
-                </Disclosure>
-            {:else}
+    <section class="relative flex flex-col px-4">
+        {#if hasEnclosure}
+            <Disclosure summary="Description">
                 <RenderHtml {html} />
-            {/if}
-        </div>
+            </Disclosure>
+        {:else}
+            <RenderHtml {html} />
+        {/if}
     </section>
 
-    <footer>
-        <span />
+    <footer
+        class="mt-2 px-4 py-2 border-t grid grid-cols-12 gap-x-4 items-center justify-center"
+    >
+        <span class="col-span-10" />
         <Bookmark bind:checked={entry.starred} on:change={toggleBookmark} />
         <StatusMarker bind:status={entry.status} />
     </footer>
 </article>
-
-<style lang="scss">
-    article {
-        --horizontal-spacing: 16px;
-        --vertical-spacing: 8px;
-        --article-border: 1px solid #0000000f;
-
-        display: flex;
-        flex-direction: column;
-        box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.4);
-        background-color: var(--depth-1-color);
-        color: var(--text-color);
-        transition: opacity 0.25s ease-in-out;
-        -moz-transition: opacity 0.25s ease-in-out;
-        -webkit-transition: opacity 0.25s ease-in-out;
-        contain: layout paint;
-    }
-
-    header {
-        position: sticky;
-        top: 0;
-        border-bottom: var(--article-border);
-        background-color: var(--depth-1-color);
-        z-index: 2;
-
-        & > div {
-            padding: 16px 16px 14px 16px;
-
-            address {
-                display: flex;
-                font-style: normal;
-                padding-bottom: 8px;
-                align-items: center;
-                gap: 8px;
-            }
-
-            & > span {
-                display: grid;
-                grid-template-columns: repeat(12, 1fr);
-                grid-column-gap: 16px;
-
-                a {
-                    display: flex;
-                    align-items: center;
-                    text-decoration: none;
-                    color: var(--text-color);
-                    font-weight: bold;
-                    grid-column: 1 / span 11;
-                    font-size: 1.1875rem;
-                    line-height: 1.375rem;
-                }
-
-                button {
-                    padding: 0;
-                    background-color: transparent;
-                    border: none;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                }
-            }
-        }
-    }
-
-    section {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        padding: 0 var(--horizontal-spacing);
-
-        &.video {
-            padding: 0;
-            margin: 0;
-        }
-    }
-
-    footer {
-        margin-top: var(--vertical-spacing);
-        padding: var(--vertical-spacing) var(--horizontal-spacing);
-        border-top: var(--article-border);
-        display: grid;
-        grid-template-columns: repeat(12, 1fr);
-        grid-column-gap: 16px;
-        align-items: center;
-        justify-content: center;
-
-        span {
-            grid-column: 1 / 11;
-        }
-    }
-</style>

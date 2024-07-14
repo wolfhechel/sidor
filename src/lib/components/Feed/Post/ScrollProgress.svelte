@@ -60,19 +60,6 @@
     $: progress == 100 && dispatch("completed");
 </script>
 
-<div>
-    <div class="progress" style:width={`${progress}%`}></div>
+<div class="w-full h-0.5 flex">
+    <div class="bg-accent" style:width={`${progress}%`}></div>
 </div>
-
-<style lang="scss">
-    div {
-        width: 100%;
-        height: 2px;
-        display: flex;
-
-        div.progress {
-            width: 20%;
-            background-color: var(--primary-color);
-        }
-    }
-</style>

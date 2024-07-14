@@ -7,15 +7,10 @@
     export let threshold: number = 0.8;
 </script>
 
-<div use:inview={{ threshold }} on:inview_enter={() => dispatch("loaded")}>
+<div
+    use:inview={{ threshold }}
+    on:inview_enter={() => dispatch("loaded")}
+    class="text-center font-bold p-4 text-fg-secondary"
+>
     Loading
 </div>
-
-<style lang="scss">
-    div {
-        text-align: center;
-        font-weight: bold;
-        padding: 16px;
-        color: var(--secondary-text-color);
-    }
-</style>

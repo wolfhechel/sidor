@@ -1,3 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .full {
+        @apply h-full w-full;
+    }
+}
+
 body {
     --nord0: #2e3440;
     --nord1: #3b4252;
@@ -18,9 +37,9 @@ body {
 
     --red-color: var(--nord11);
     --green-color: hsl(90 50% 50% / 1);
-    
+
     --error-color: var(--nord11);
-        
+
     --border-color: #f0e9e9;
     --primary-color: #f65e1c;
     --content-size: 600px;
@@ -48,18 +67,10 @@ body {
     color: var(--text-color);
 }
 
-html, body {
+html,
+body {
     height: 100%;
     background-color: var(--depth-1-color);
     font-size: 16px;
     line-height: 24px;
-}
-
-* {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-        display: none;
-    }
 }

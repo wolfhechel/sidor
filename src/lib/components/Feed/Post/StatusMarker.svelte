@@ -28,7 +28,6 @@
         window.removeEventListener("contextmenu", disableContextMenu);
 
         if (timerHandle) {
-            console.log("has timer");
             clearTimeout(timerHandle);
             status =
                 status == EntryStatus.Read

@@ -4,6 +4,7 @@
 </script>
 
 <img
+    class="w-full aspect-video object-cover"
     srcset="https://i4.ytimg.com/vi/{videoId}/default.jpg 120w, 
           https://i4.ytimg.com/vi/{videoId}/mqdefault.jpg 320w,
           https://i4.ytimg.com/vi/{videoId}/hqdefault.jpg 420w,
@@ -17,11 +18,3 @@
     src="https://i4.ytimg.com/vi/{videoId}/maxresdefault.jpg"
     {alt}
 />
-
-<style lang="scss">
-    img {
-        width: 100%;
-        aspect-ratio: 16 / 9;
-        object-fit: cover;
-    }
-</style>

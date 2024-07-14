@@ -4,18 +4,22 @@
     let animate: boolean = false;
 </script>
 
-<div use:inview on:inview_enter={() => (animate = true)}>
-    <span>All caught up!</span>
+<div
+    use:inview
+    on:inview_enter={() => (animate = true)}
+    class="flex min-h-full items-center gap-2 justify-center p-4"
+>
+    <span class="text-sm font-bold">All caught up!</span>
 
     <svg
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 130.2 130.2"
         class:animate
+        class="block w-8"
     >
         <circle
-            class="path circle"
-            fill="none"
+            class="stroke-fg-secondary fill-none"
             stroke-width="12"
             stroke-miterlimit="10"
             cx="65.1"
@@ -23,8 +27,7 @@
             r="59.1"
         />
         <polyline
-            class="path check"
-            fill="none"
+            class="stroke-fg-secondary fill-none"
             stroke-width="12"
             stroke-linecap="round"
             stroke-miterlimit="10"
@@ -34,56 +37,25 @@
 </div>
 
 <style lang="scss">
-    div {
-        display: flex;
-        min-height: 100%;
-        align-items: center;
-        gap: 8px;
-        justify-content: center;
-        padding: 16px;
-        --color: var(--secondary-text-color);
-    }
-
     svg {
-        width: 32px;
-        display: block;
-    }
+        circle {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 0;
+        }
 
-    .path {
-        stroke-dasharray: 1000;
-        stroke-dashoffset: 0;
-        stroke: var(--color);
-
-        &.check {
+        polyline {
+            stroke-dasharray: 1000;
             stroke-dashoffset: -100;
         }
-    }
 
-    svg.animate .path {
-        &.circle {
-            -webkit-animation: dash 0.9s ease-in-out;
-            animation: dash 0.9s ease-in-out;
-        }
+        &.animate {
+            circle {
+                animation: dash 0.9s ease-in-out;
+            }
 
-        &.check {
-            -webkit-animation: dash-check 0.9s 0.35s ease-in-out forwards;
-            animation: dash-check 0.9s 0.35s ease-in-out forwards;
-        }
-    }
-
-    span {
-        color: var(--color);
-        font-weight: bold;
-        font-size: 1.1875rem;
-        line-height: 1.375rem;
-    }
-
-    @-webkit-keyframes dash {
-        0% {
-            stroke-dashoffset: 1000;
-        }
-        100% {
-            stroke-dashoffset: 0;
+            polyline {
+                animation: dash-check 0.9s 0.35s ease-in-out forwards;
+            }
         }
     }
 
@@ -93,15 +65,6 @@
         }
         100% {
             stroke-dashoffset: 0;
-        }
-    }
-
-    @-webkit-keyframes dash-check {
-        0% {
-            stroke-dashoffset: -100;
-        }
-        100% {
-            stroke-dashoffset: 900;
         }
     }
 

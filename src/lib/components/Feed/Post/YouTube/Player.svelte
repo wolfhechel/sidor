@@ -109,19 +109,8 @@
     <script src="https://www.youtube.com/iframe_api"></script>
 </svelte:head>
 
-<button on:click={() => load()} bind:this={el}><Thumbnail {videoId} /></button>
-
-<style lang="scss">
-    button {
-        padding: 0;
-        border: 0;
-        cursor: pointer;
-        line-height: 0;
-    }
-
-    :global(iframe) {
-        width: 100%;
-        aspect-ratio: 16 / 9;
-        height: auto;
-    }
-</style>
+<button
+    class="leading-none cursor-pointer w-full aspect-video h-auto"
+    on:click={() => load()}
+    bind:this={el}><Thumbnail {videoId} /></button
+>

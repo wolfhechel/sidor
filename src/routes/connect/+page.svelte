@@ -30,73 +30,59 @@
 </script>
 
 <svelte:head>
-    <title>Connect to Miniflux instance</title>
+    <title>Connect to Miniflux</title>
 </svelte:head>
-<main>
-    <section>
-        <p>
-            {#if error}
-                <span class="error">Error: {error}</span>
-            {:else}
-                <strong>Enter host address and api token to connect</strong>
-            {/if}
+
+<main class="w-full max-w-sm m-auto">
+    <form
+        class="bg-white shadow-md rounded px-7 pt-6 pb-8 mb-2 mt-16"
+        on:submit={() => connect()}
+    >
+        <h2 class="text-base font-semibold leading-7">Connect to Miniflux</h2>
+        <p class="mt-1 mb-6 text-sm leading-6 text-fg-secondary">
+            Enter host address and API token to connect.
         </p>
 
-        <form on:submit={() => connect()}>
-            <label for="host">
-                Host:
-                <input bind:value={host} required type="url" id="host" />
-            </label>
+        {#if error}
+            <p
+                class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 capitalize"
+                role="alert"
+            >
+                <span class="font-semibold">Failed to connect!</span>
+                {error}
+            </p>
+        {/if}
+        <div class="mb-4">
+            <label
+                class="block text-sm text-fg-secondary font-bold mb-2"
+                for="host">Host</label
+            >
+            <input
+                class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight ring-inset focus:outline-none focus:ring-2"
+                bind:value={host}
+                required
+                type="url"
+                id="host"
+            />
+        </div>
 
-            <label for="token">
-                Token:
-                <input bind:value={token} required type="text" id="token" />
-            </label>
+        <div class="mb-4">
+            <label
+                class="block text-sm text-fg-secondary font-bold mb-2"
+                for="token">Token</label
+            >
+            <input
+                class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight ring-inset focus:outline-none focus:ring-2"
+                bind:value={token}
+                required
+                type="text"
+                id="token"
+            />
+        </div>
 
-            <button type="submit">Connect</button>
-        </form>
-    </section>
+        <button
+            class="bg-accent opacity-80 hover:opacity-100 text-white font-bold py-2 px-4 rounded"
+            type="submit">Connect</button
+        >
+    </form>
 </main>
-
-<style lang="scss">
-    main {
-        height: 100%;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        justify-content: center;
-    }
-
-    section {
-        align-self: center;
-        max-width: 400px;
-    }
-
-    span.error {
-        display: block;
-        padding: 10px;
-        background-color: var(--error-color);
-        font-weight: bold;
-        color: var(--nord6);
-        text-transform: capitalize;
-    }
-
-    label {
-        font-weight: bold;
-        display: block;
-        margin-bottom: 16px;
-        font-size: 0.9rem;
-
-        input {
-            display: block;
-            box-sizing: border-box;
-            width: 100%;
-        }
-    }
-
-    button {
-        margin-top: 16px;
-        width: 100%;
-    }
-</style>

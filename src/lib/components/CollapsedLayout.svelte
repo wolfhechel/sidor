@@ -1,165 +1,41 @@
-<div id="wrapper" class="no-scrollbar">
-    <main>
+<div class="full flex flex-col lg:flex-row lg:gap-2">
+    <main
+        class="overflow-x-hidden basis-full w-full lg:max-w-screen-md lg:order-2"
+    >
         <slot name="main"></slot>
     </main>
 
-    <div id="navigation">
-        <nav class="no-scrollbar">
+    <div
+        class="flex lg:contents flex-row z-20 h-12 border-t box-content border-gray-100"
+    >
+        <nav
+            class="no-scrollbar flex flex-1 overflow-x-scroll lg:pt-16 lg:w-0 lg:order-3"
+        >
             <slot name="nav" />
         </nav>
-        <aside>
-            <input type="checkbox" id={`toggle-context`} />
-            <label for={`toggle-context`}>
-                <div>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
+        <aside
+            class="h-12 aspect-square lg:pt-16 lg:flex lg:flex-1 lg:justify-end lg:w-0 lg:order-1"
+        >
+            <input class="hidden peer" type="checkbox" id="toggle-context" />
+            <label
+                for="toggle-context"
+                class="flex h-full justify-center items-center flex-col gap-2 p-2 group peer-checked:bg-hover lg:hidden"
+            >
+                <span
+                    class="border-t border-b border-fg w-full transition origin-left peer-checked:group-[]:rotate-45 peer-checked:group-[]:translate-x-1 peer-checked:group-[]:-translate-y-px"
+                ></span>
+                <span
+                    class="border-t border-b border-fg w-full transition-[width] peer-checked:group-[]:w-0"
+                ></span>
+                <span
+                    class="border-t border-b border-fg w-full transition origin-left peer-checked:group-[]:-rotate-45 peer-checked:group-[]:translate-x-1 peer-checked:group-[]:translate-y-px"
+                ></span>
             </label>
-            <div>
+            <div
+                class="hidden left-0 bottom-12 peer-checked:block peer-checked:absolute peer-checked:w-full lg:block"
+            >
                 <slot name="aside" />
             </div>
         </aside>
     </div>
 </div>
-
-<style lang="scss">
-    div#wrapper {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-    }
-
-    div#navigation {
-        border-top: 1px solid var(--border-color);
-        display: flex;
-        z-index: 2;
-        container: navigation-bar / size;
-        height: 48px;
-    }
-
-    main {
-        overflow: hidden;
-        flex: 3;
-    }
-
-    nav {
-        flex: 1;
-        display: flex;
-        overflow-x: scroll;
-    }
-
-    aside {
-        height: 100%;
-        aspect-ratio: 1 / 1;
-
-        & > input {
-            display: none;
-        }
-
-        & > div {
-            display: none;
-        }
-
-        label {
-            display: flex;
-            height: 100%;
-
-            div {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                flex-direction: column;
-                gap: 8px;
-                padding: 8px;
-
-                span {
-                    border-top: 1px solid var(--text-color);
-                    border-bottom: 1px solid var(--text-color);
-                    width: 32px;
-
-                    transform-origin: left center;
-                    transform: rotate(0deg);
-                    transition: 0.2s ease-in-out;
-                }
-            }
-        }
-
-        input[type="checkbox"]:checked ~ {
-            & label {
-                background-color: var(--button-hover-color);
-
-                div > span {
-                    &:nth-child(1) {
-                        transform: translate(6px, 0) rotate(45deg);
-                    }
-
-                    &:nth-child(2) {
-                        width: 0%;
-                        opacity: 0;
-                    }
-
-                    &:nth-child(3) {
-                        transform: translate(6px, 2px) rotate(-45deg);
-                    }
-                }
-            }
-        }
-    }
-
-    @container navigation-bar (orientation: landscape) {
-        input[type="checkbox"]:checked ~ div {
-            display: block;
-            position: absolute;
-            bottom: 100%;
-            left: 0;
-            width: 100%;
-        }
-    }
-
-    @media (orientation: landscape) {
-        div#wrapper {
-            flex-direction: row;
-            width: 100%;
-            max-width: unset;
-            gap: 8px;
-        }
-
-        div#navigation {
-            display: contents;
-        }
-
-        main {
-            width: 100%;
-            max-width: 75ch;
-            order: 1;
-        }
-
-        nav,
-        aside {
-            padding-top: 64px;
-        }
-
-        nav {
-            width: auto;
-            order: 2;
-        }
-
-        aside {
-            display: flex;
-            justify-content: end;
-            order: 0;
-            flex: 1;
-            width: auto;
-        }
-
-        aside div {
-            display: initial;
-        }
-
-        aside label {
-            display: none;
-        }
-    }
-</style>

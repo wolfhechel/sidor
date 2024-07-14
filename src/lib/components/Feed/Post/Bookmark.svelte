@@ -8,31 +8,15 @@
     const id = counter++;
 </script>
 
-<input type="checkbox" id="bookmark-{id}" bind:checked on:change />
-<label for="bookmark-{id}">
-    <span></span>
+<input
+    class="hidden peer"
+    type="checkbox"
+    id="bookmark-{id}"
+    bind:checked
+    on:change
+/>
+<label
+    class="text-[1.5rem] leading-[2rem] font-light before:visible before:block before:cursor-pointer before:content-['\2606'] peer-checked:before:content-['\2605']"
+    for="bookmark-{id}"
+>
 </label>
-
-<style lang="scss">
-    input[type="checkbox"] {
-        display: none;
-    }
-
-    label {
-        font-size: 1.5rem;
-        line-height: 2rem;
-        font-weight: 300;
-        color: var(--text-color);
-    }
-
-    span::before {
-        visibility: visible;
-        content: "\2606";
-        display: block;
-        cursor: pointer;
-    }
-
-    input[type="checkbox"]:checked + label span::before {
-        content: "\2605";
-    }
-</style>

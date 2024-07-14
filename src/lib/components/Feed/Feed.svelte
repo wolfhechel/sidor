@@ -114,7 +114,11 @@
 	};
 </script>
 
-<section id={`${feedId}`} use:scrollProgressParent={scrollProgress}>
+<section
+	id={`${feedId}`}
+	use:scrollProgressParent={scrollProgress}
+	class="full flex flex-col gap-2 overflow-y-scroll scroll-smooth no-scrollbar"
+>
 	{#if selectedStatus}
 		<StatusMenu bind:selectedStatus />
 	{/if}
@@ -138,16 +142,3 @@
 		<Finished />
 	{/if}
 </section>
-
-<style lang="scss">
-	section {
-		height: 100%;
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
-		overflow-y: scroll;
-		background-color: var(--depth-0-color);
-		scroll-behavior: smooth;
-	}
-</style>
