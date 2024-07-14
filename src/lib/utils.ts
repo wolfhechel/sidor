@@ -1,4 +1,4 @@
-import dayjs, { type Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { Enclosure } from '$lib/api';
 
@@ -72,7 +72,20 @@ export const groupByTime = <
             );
         }
     ).reduce((groups, obj, index) => {
-        let value: string = dayjs(obj[key]).from(now);
+        let daysAgo = dayjs(now).diff(obj[key], 'd');
+        let weeks = Math.floor(daysAgo / 7);
+
+        let value: string;
+
+        if (daysAgo < 1) {
+            value = 'today';
+        } else if (weeks == 1) {
+            value = 'last week';
+        } else if ((weeks > 1) && (daysAgo <= 25)) {
+            value = `${weeks} weeks ago`;
+        } else {
+            value = dayjs(obj[key]).from(now);
+        }
 
         let group = groups.find(({ key }) => key == value);
 

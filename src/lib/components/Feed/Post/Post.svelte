@@ -8,6 +8,8 @@
         removeDomElements,
     } from "$lib/utils";
 
+    import Time from "svelte-time";
+
     import type { Entry } from "$lib/api";
 
     import Favicon from "./Favicon.svelte";
@@ -73,11 +75,14 @@
 >
     <header class="sticky top-0 border-b bg-white z-10">
         <div class="p-4">
-            <address class="flex pb-2 items-center gap-2">
+            <div class="flex pb-2 items-center gap-2">
                 <Favicon url={entry.url} size="20" /><span
                     >{entry.feed.title}</span
                 >
-            </address>
+                <span class="text-fg-secondary"
+                    ><Time relative timestamp={entry.published_at} /></span
+                >
+            </div>
 
             <span class="grid grid-cols-12 gap-x-4">
                 <a
