@@ -84,7 +84,7 @@ export const groupByTime = <
         } else if ((weeks > 1) && (daysAgo <= 25)) {
             value = `${weeks} weeks ago`;
         } else {
-            value = dayjs(obj[key]).from(now);
+            value = dayjs(obj[key]).from(now)
         }
 
         let group = groups.find(({ key }) => key == value);
