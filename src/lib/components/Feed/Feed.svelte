@@ -117,7 +117,7 @@
 <section
 	id={`${feedId}`}
 	use:scrollProgressParent={scrollProgress}
-	class="full flex flex-col gap-2 overflow-y-scroll scroll-smooth no-scrollbar"
+	class="full flex flex-col overflow-y-scroll scroll-smooth no-scrollbar"
 >
 	{#if selectedStatus}
 		<StatusMenu bind:selectedStatus />

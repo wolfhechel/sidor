@@ -4,6 +4,7 @@
 
 <script lang="ts">
     export let checked: boolean;
+    import Icon from "@iconify/svelte";
 
     const id = counter++;
 </script>
@@ -15,8 +16,10 @@
     bind:checked
     on:change
 />
-<label
-    class="text-[1.5rem] leading-[2rem] font-light before:visible before:block before:cursor-pointer before:content-['\2606'] peer-checked:before:content-['\2605']"
-    for="bookmark-{id}"
->
+<label for="bookmark-{id}">
+    <Icon
+        icon={checked ? "mdi-bookmark" : "mdi-bookmark-outline"}
+        width="1.6em"
+        height="1.6em"
+    />
 </label>

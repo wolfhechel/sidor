@@ -93,7 +93,7 @@
 <article
     bind:this={contentElement}
     id={constructEntryId(feedId, entryIndex)}
-    class="flex flex-col bg-white contain-layout contain-paint shadow-md"
+    class="flex flex-col bg-white contain-layout contain-paint border-b"
 >
     <header class="sticky top-0 border-b bg-white z-10">
         <div class="p-4">
@@ -114,7 +114,7 @@
                 >
 
                 <button
-                    class="flex justify-center items-center"
+                    class="flex justify-center items-center aspect-square"
                     on:click={() => {
                         document
                             .querySelector(
@@ -178,10 +178,7 @@
         {/if}
     </section>
 
-    <footer
-        class="mt-2 px-4 py-2 border-t grid grid-cols-12 gap-x-4 items-center justify-center"
-    >
-        <span class="col-span-10" />
+    <footer class="mt-2 px-4 py-2 flex gap-x-4 items-center justify-end">
         <Bookmark bind:checked={entry.starred} on:change={toggleBookmark} />
         <StatusMarker bind:status={entry.status} />
     </footer>

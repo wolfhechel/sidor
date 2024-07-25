@@ -2,7 +2,7 @@
     import { EntryStatus } from "$lib/api";
 
     export let status: EntryStatus = EntryStatus.Read;
-    export let size: string = "24px";
+    export let size: string = "22px";
 
     let timerHandle: string | number | NodeJS.Timeout | undefined;
 
