@@ -6,7 +6,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        accent: '#f65e1c',
+        accent: '#FF8441', // '#f65e1c',
         border: '#f0e9e9',
         hover: 'rgb(243, 243, 248)',
         fg: '#313131',
