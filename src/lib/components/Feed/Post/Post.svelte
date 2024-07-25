@@ -178,7 +178,9 @@
         {/if}
     </section>
 
-    <footer class="mt-2 px-4 py-2 flex gap-x-4 items-center justify-end">
+    <footer
+        class="mt-2 px-4 py-2 flex gap-x-4 items-center justify-end border-t"
+    >
         <Bookmark bind:checked={entry.starred} on:change={toggleBookmark} />
         <StatusMarker bind:status={entry.status} />
     </footer>

@@ -107,7 +107,7 @@
 </script>
 
 <aside
-    class="shadow-lg rounded-lg overflow-hidden border border-border flex flex-col justify-center items-center my-4"
+    class="shadow overflow-hidden border border-border flex flex-col justify-center items-center my-4"
 >
     {#await load(url)}
         <div class="flex flex-col p-4 gap-1">
@@ -115,19 +115,24 @@
         </div>
     {:then response}
         {@const urlDomain = domain(url)}
-        <a class="flex flex-col no-underline w-full" href={url} target="_blank">
+        <a
+            class="flex flex-col md:flex-row no-underline w-full"
+            href={url}
+            target="_blank"
+        >
             {#if response.image}
                 <img
-                    class="w-full h-[250px] object-cover object-center"
+                    class="w-full h-[250px] md:h-[150px] md:w-auto md:aspect-square object-cover object-center"
                     src={getAbsoluteAssetUrl(url, response.image)}
                     alt={`Shared image from ${url}`}
                 />
             {/if}
             <div class="flex flex-col p-4 gap-1">
-                <span class="text-fg-secondary">{urlDomain}</span>
+                <span class="text-fg-secondary text-xs">{urlDomain}</span>
                 <span>{response.title}</span>
                 {#if response.description}
-                    <span class="text-fg-secondary">{response.description}</span
+                    <span class="text-fg-secondary line-clamp-3"
+                        >{response.description}</span
                     >
                 {/if}
             </div>
