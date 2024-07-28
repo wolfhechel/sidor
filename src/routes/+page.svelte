@@ -49,7 +49,6 @@
                         properties: {
                             endpoint: `categories/${category.id}/entries`,
                             feedId: category.id.toString(),
-                            selectedStatus: "unread",
                         },
                     };
                 }),

@@ -12,7 +12,6 @@
 
 	import { Post, initScrollProgress, scrollProgressParent } from "./Post";
 
-	import StatusMenu from "./StatusMenu.svelte";
 	import Loader from "./Loader.svelte";
 	import Finished from "./Finished.svelte";
 	import GroupLabel from "./GroupLabel.svelte";
@@ -20,7 +19,6 @@
 	export let endpoint: string;
 	export let feedId: string;
 	export let starred: boolean = false;
-	export let selectedStatus: string | undefined = undefined;
 
 	const scrollProgress = initScrollProgress();
 
@@ -42,23 +40,14 @@
 		$entries = [];
 	};
 
-	$: selectedStatus && reset();
-
-	const load = (
-		endpoint: string,
-		selectedStatus: string | undefined,
-		starred: boolean,
-	) => {
+	const load = (endpoint: string, starred: boolean) => {
 		let params: Record<string, string | string[]> = {
 			direction: "desc",
 			limit: limit.toString(),
 			offset: offset.toString(),
 			starred: starred ? "true" : "false",
+			status: ["read", "unread"],
 		};
-
-		if (selectedStatus) {
-			params["status"] = [selectedStatus];
-		}
 
 		$client.get<Pagination<Entry>>(endpoint, params).then((value) => {
 			if (total == Infinity) {
@@ -119,10 +108,6 @@
 	use:scrollProgressParent={scrollProgress}
 	class="full flex flex-col overflow-y-scroll scroll-smooth no-scrollbar"
 >
-	{#if selectedStatus}
-		<StatusMenu bind:selectedStatus />
-	{/if}
-
 	{#each $groupedEntries as { key, entries }}
 		<GroupLabel label={key} />
 		{#each entries as { index, obj }}
@@ -137,7 +122,7 @@
 	{/each}
 
 	{#if $entries.length < total}
-		<Loader on:loaded={() => load(endpoint, selectedStatus, starred)} />
+		<Loader on:loaded={() => load(endpoint, starred)} />
 	{:else}
 		<Finished />
 	{/if}

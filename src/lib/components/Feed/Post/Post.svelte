@@ -44,7 +44,6 @@
     import Bookmark from "./Bookmark.svelte";
     import * as YouTube from "./YouTube";
     import Icon from "@iconify/svelte";
-    import StatusMarker from "./StatusMarker.svelte";
 
     export let entry: Entry;
     export let entryIndex: number;
@@ -104,6 +103,10 @@
                 <span class="text-fg-secondary"
                     ><Time relative timestamp={entry.published_at} /></span
                 >
+                {#if entry.status == "unread"}
+                    <span class="block h-2 aspect-square rounded bg-accent"
+                    ></span>
+                {/if}
             </div>
 
             <span class="grid grid-cols-12 gap-x-4">
@@ -182,6 +185,5 @@
         class="mt-2 px-4 py-2 flex gap-x-4 items-center justify-end border-t"
     >
         <Bookmark bind:checked={entry.starred} on:change={toggleBookmark} />
-        <StatusMarker bind:status={entry.status} />
     </footer>
 </article>

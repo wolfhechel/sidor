@@ -30,12 +30,6 @@ export interface Feed {
     feed_url: string;
 }
 
-export enum EntryStatus {
-    Unread = 'unread',
-    Read = 'read',
-    Removed = 'removed'
-};
-
 export interface Entry {
     id: number;
     user_id: number;
@@ -48,7 +42,7 @@ export interface Entry {
     published_at: string;
     created_at: string;
     changed_at: string;
-    status: EntryStatus;
+    status: 'read' | 'unread' | 'removed';
     feed: Feed;
     starred: boolean;
     enclosures: Enclosure[];
