@@ -106,7 +106,7 @@
 <section
 	id={`${feedId}`}
 	use:scrollProgressParent={scrollProgress}
-	class="full flex flex-col overflow-y-scroll scroll-smooth no-scrollbar"
+	class="full flex flex-col overflow-y-scroll scroll-smooth no-scrollbar gap-2"
 >
 	{#each $groupedEntries as { key, entries }}
 		<GroupLabel label={key} />

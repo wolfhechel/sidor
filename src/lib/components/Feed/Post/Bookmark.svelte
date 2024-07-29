@@ -19,7 +19,7 @@
 <label for="bookmark-{id}">
     <Icon
         icon={checked ? "mdi-bookmark" : "mdi-bookmark-outline"}
-        width="1.6em"
-        height="1.6em"
+        width="1.5em"
+        height="1.5em"
     />
 </label>

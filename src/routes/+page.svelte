@@ -34,7 +34,7 @@
                 {
                     component: Feed,
                     id: 0,
-                    title: "★",
+                    title: "Read Later",
                     properties: {
                         endpoint: "entries",
                         feedId: "0",

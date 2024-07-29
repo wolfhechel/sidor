@@ -117,7 +117,7 @@
                 >
 
                 <button
-                    class="flex justify-center items-center"
+                    class="flex justify-end items-center"
                     on:click={() => {
                         document
                             .querySelector(
@@ -145,7 +145,7 @@
     </header>
 
     {#if audio}
-        <section class="relative flex flex-col px-4">
+        <section class="relative flex flex-col px-4 max-w-[65ch]">
             <AudioPlayer
                 src={audio.url}
                 metadata={new MediaMetadata({
