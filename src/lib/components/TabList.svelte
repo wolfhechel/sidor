@@ -14,10 +14,10 @@
     {#each tabs as tab}
         {@const isCurrent = currentTab == tab.id}
 
-        <li class="flex flex-1 lg:flex-none hover:bg-hover">
+        <li class="flex flex-1 lg:flex-none">
             <a
                 href="#{tab.id}"
-                class="flex flex-1 items-center justify-center whitespace-nowrap px-4 border-b-2 border-transparent aria-selected:border-accent lg:justify-start lg:p-4 lg:border-l-2 lg:border-b-0"
+                class="flex flex-1 items-center justify-center whitespace-nowrap px-4 border-b-2 border-transparent aria-selected:border-accent lg:justify-start lg:py-2 lg:border-l-2 lg:border-b-0"
                 aria-selected={isCurrent}
                 role="tab"
                 aria-controls="tabpanel"><span>{tab.title}</span></a

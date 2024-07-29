@@ -117,7 +117,7 @@
                 >
 
                 <button
-                    class="flex justify-center items-center aspect-square"
+                    class="flex justify-center items-center"
                     on:click={() => {
                         document
                             .querySelector(
