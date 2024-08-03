@@ -1,10 +1,5 @@
 <script lang="ts">
-	import {
-		writable,
-		derived,
-		type Writable,
-		type Readable,
-	} from "svelte/store";
+	import { derived, type Readable } from "svelte/store";
 
 	import { client } from "$lib/store";
 	import { type Entry, type Pagination } from "$lib/api";
@@ -15,92 +10,149 @@
 	import Loader from "./Loader.svelte";
 	import Finished from "./Finished.svelte";
 	import GroupLabel from "./GroupLabel.svelte";
+	import {
+		createInfiniteQuery,
+		createMutation,
+		useQueryClient,
+		type InfiniteData,
+		type QueryKey,
+	} from "@tanstack/svelte-query";
 
 	export let endpoint: string;
 	export let feedId: string;
-	export let starred: boolean = false;
+	export let starred: boolean | undefined = undefined;
 
 	const scrollProgress = initScrollProgress();
 
-	const limit = 10;
-	const entries: Writable<Entry[]> = writable([]);
+	const pagesConcatenated = (pages: Pagination<Entry>[]): Entry[] => {
+		return pages.reduce((allEntries, { entries }) => {
+			return allEntries.concat(entries);
+		}, [] as Entry[]);
+	};
+
+	const query = createInfiniteQuery(
+		derived(client, ($client) => ({
+			queryKey: ["entries", feedId],
+			queryFn: async ({ pageParam }: { pageParam: number }) => {
+				let params: Record<string, string | string[]> = {
+					direction: "desc",
+					limit: "4",
+					offset: pageParam.toString(),
+					status: ["read", "unread"],
+				};
+
+				if (starred !== undefined) {
+					params["starred"] = starred ? "true" : "false";
+				}
+
+				return await $client.get<Pagination<Entry>>(endpoint, params);
+			},
+			initialPageParam: 0,
+			getNextPageParam: (
+				lastPage: Pagination<Entry>,
+				allPages: Pagination<Entry>[],
+			) => {
+				let numEntries = pagesConcatenated(allPages).length;
+
+				return numEntries < lastPage.total ? numEntries : null;
+			},
+		})),
+	);
+
 	const groupedEntries: Readable<Grouped<Entry>[]> = derived(
-		[entries],
-		([$entries]) => {
-			return groupByTime($entries, "published_at");
+		[query],
+		([$query]) => {
+			let allEntries = pagesConcatenated($query.data?.pages || []);
+
+			return groupByTime(allEntries, "published_at");
 		},
 	);
 
-	$: offset = 0;
-	$: total = Infinity;
+	const queryClient = useQueryClient();
 
-	const reset = () => {
-		total = Infinity;
-		offset = 0;
-		$entries = [];
-	};
-
-	const load = (endpoint: string, starred: boolean) => {
-		let params: Record<string, string | string[]> = {
-			direction: "desc",
-			limit: limit.toString(),
-			offset: offset.toString(),
-			starred: starred ? "true" : "false",
-			status: ["read", "unread"],
-		};
-
-		$client.get<Pagination<Entry>>(endpoint, params).then((value) => {
-			if (total == Infinity) {
-				total = value.total;
-			}
-
-			offset += limit;
-
-			$entries = $entries.concat(value.entries);
+	const stallCacheWhileMutate = async (
+		queryKey: QueryKey,
+		id: number,
+		callback: (entry: Entry) => boolean,
+	) => {
+		await queryClient.cancelQueries({
+			queryKey,
 		});
-	};
 
-	const setEntryStatus = ({
-		detail: { id, status },
-	}: {
-		detail: {
-			id: number;
-			status: string;
-		};
-	}) => {
-		$client
-			.put<"">(`entries`, {
-				entry_ids: [id],
-				status,
-			})
-			.then(() => {
-				let entry = $entries.find((entry) => entry.id == id);
+		queryClient.setQueryData(
+			queryKey,
+			(data: InfiniteData<Pagination<Entry>, number>) => {
+				let entry: Entry | undefined;
 
-				if (entry) {
-					entry.status = status;
+				for (const feed of data.pages) {
+					entry = feed.entries.find((entry) => entry.id == id);
+
+					if (entry && callback(entry)) {
+						break;
+					}
 				}
 
-				$entries = $entries;
+				return data;
+			},
+		);
+	};
+
+	const updateEntryStatus = createMutation<
+		void,
+		Error,
+		{
+			detail: {
+				id: number;
+				status: string;
+			};
+		},
+		void
+	>({
+		mutationFn: async ({ detail }) => {
+			await $client.put<"">(`entries`, {
+				entry_ids: [detail.id],
+				status: detail.status,
 			});
-	};
+		},
+		onMutate: async ({ detail }) => {
+			await stallCacheWhileMutate(
+				["entries", feedId],
+				detail.id,
+				(entry) => {
+					entry.status = detail.status as typeof entry.status;
 
-	const toggleEntryBookmark = ({
-		detail: { id },
-	}: {
-		detail: {
-			id: number;
-		};
-	}) => {
-		$client.put(`entries/${id}/bookmark`, {}).catch(() => {
-			let entry = $entries.find((entry) => entry.id == id);
+					return true;
+				},
+			);
+		},
+	});
 
-			if (entry) {
-				entry.starred = !entry.starred;
-			}
+	const updateEntryStarred = createMutation<
+		void,
+		Error,
+		{
+			detail: {
+				id: number;
+			};
+		},
+		void
+	>({
+		mutationFn: async ({ detail }) => {
+			console.log(detail);
+			await $client.put(`entries/${detail.id}/bookmark`, {});
+		},
+		onMutate: async ({ detail }) => {
+			await stallCacheWhileMutate(
+				["entries", feedId],
+				detail.id,
+				(entry) => {
+					entry.starred = !entry.starred;
 
-			$entries = $entries;
-		});
-	};
+					return true;
+				},
+			);
+		},
+	});
 </script>
 
 <section
@@ -108,21 +160,20 @@
 	use:scrollProgressParent={scrollProgress}
 	class="full flex flex-col overflow-y-scroll scroll-smooth no-scrollbar gap-2"
 >
-	{#each $groupedEntries as { key, entries }}
+	{#each $groupedEntries as { key, entries } (key)}
 		<GroupLabel label={key} />
-		{#each entries as { index, obj }}
+		{#each entries as { index, obj } (obj.id)}
 			<Post
 				entry={obj}
 				entryIndex={index}
 				{feedId}
-				on:setStatus={setEntryStatus}
-				on:toggleBookmark={toggleEntryBookmark}
+				on:setStatus={$updateEntryStatus.mutate}
+				on:toggleBookmark={$updateEntryStarred.mutate}
 			/>
 		{/each}
 	{/each}
-
-	{#if $entries.length < total}
-		<Loader on:loaded={() => load(endpoint, starred)} />
+	{#if $query.hasNextPage}
+		<Loader on:loaded={() => $query.fetchNextPage()} />
 	{:else}
 		<Finished />
 	{/if}

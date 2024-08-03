@@ -76,6 +76,8 @@
     };
 
     const setStatus = (status: string) => {
+        if (status == entry.status) return;
+
         dispatch("setStatus", {
             id: entry.id,
             status: status,
