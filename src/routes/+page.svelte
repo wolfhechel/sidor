@@ -11,7 +11,6 @@
         type Page,
     } from "$lib/components/PagedContainer.svelte";
     import TabList, { type Tab } from "$lib/components/TabList.svelte";
-    import CollapsedLayout from "$lib/components/CollapsedLayout.svelte";
     import Feed from "$lib/components/Feed";
     import { createQuery } from "@tanstack/svelte-query";
     import { onMount } from "svelte";
@@ -73,14 +72,19 @@
     <title>{$pages.find(({ id }) => id == currentPage)?.title}</title>
 </svelte:head>
 
-<CollapsedLayout>
-    <TabList slot="nav" bind:currentTab={currentPage} tabs={$pages} />
-    <PagedContainer
-        slot="main"
-        bind:currentPage
-        pages={$pages}
-        on:pageChanged={(e) => {
-            window.location.hash = `#${e.detail}`;
-        }}
-    />
-</CollapsedLayout>
+<div class="full flex flex-col lg:flex-row">
+    <nav
+        class="no-scrollbar flex overflow-x-scroll h-12 lg:h-auto lg:py-14 lg:px-8 lg:w-60"
+    >
+        <TabList bind:currentTab={currentPage} tabs={$pages} />
+    </nav>
+    <main class="overflow-x-hidden basis-full w-full lg:flex-1">
+        <PagedContainer
+            bind:currentPage
+            pages={$pages}
+            on:pageChanged={(e) => {
+                window.location.hash = `#${e.detail}`;
+            }}
+        />
+    </main>
+</div>
