@@ -107,7 +107,7 @@
 </script>
 
 <aside
-    class="shadow overflow-hidden border border-border flex flex-col justify-center items-center my-4"
+    class="shadow overflow-hidden border flex flex-col justify-center items-center my-4"
 >
     {#await load(url)}
         <div class="flex flex-col p-4 gap-1">
@@ -128,10 +128,12 @@
                 />
             {/if}
             <div class="flex flex-col p-4 gap-1">
-                <span class="text-fg-secondary text-xs">{urlDomain}</span>
+                <span class="text-light-foreground-secondary text-xs"
+                    >{urlDomain}</span
+                >
                 <span>{response.title}</span>
                 {#if response.description}
-                    <span class="text-fg-secondary line-clamp-3"
+                    <span class="text-light-foreground-secondary line-clamp-3"
                         >{response.description}</span
                     >
                 {/if}
@@ -140,7 +142,7 @@
     {:catch error}
         <div class="flex flex-col p-4 gap-1">
             <span>Failed to load link preview</span>
-            <span class="text-fg-secondary">{error}</span>
+            <span class="text-light-foreground-secondary">{error}</span>
         </div>
     {/await}
 </aside>

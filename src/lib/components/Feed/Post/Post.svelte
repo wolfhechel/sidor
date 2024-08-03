@@ -102,7 +102,7 @@
                 <Favicon url={entry.url} size="20" /><span
                     >{entry.feed.title}</span
                 >
-                <span class="text-fg-secondary"
+                <span class="text-light-foreground-secondary"
                     ><Time relative timestamp={entry.published_at} /></span
                 >
                 {#if entry.status == "unread"}

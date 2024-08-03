@@ -19,7 +19,7 @@
         class="block w-8"
     >
         <circle
-            class="stroke-fg-secondary fill-none"
+            class="stroke-light-foreground-secondary fill-none"
             stroke-width="12"
             stroke-miterlimit="10"
             cx="65.1"
@@ -27,7 +27,7 @@
             r="59.1"
         />
         <polyline
-            class="stroke-fg-secondary fill-none"
+            class="stroke-light-foreground-secondary fill-none"
             stroke-width="12"
             stroke-linecap="round"
             stroke-miterlimit="10"

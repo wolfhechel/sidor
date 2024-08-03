@@ -10,7 +10,7 @@
 <div
     use:inview={{ threshold }}
     on:inview_enter={() => dispatch("loaded")}
-    class="text-center font-bold p-4 text-fg-secondary"
+    class="text-center font-bold p-4 text-light-foreground-secondary"
 >
     Loading
 </div>

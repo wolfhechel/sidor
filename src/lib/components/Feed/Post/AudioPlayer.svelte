@@ -94,7 +94,7 @@
     <div class="flex-1 flex items-center gap-2">
         <span class="text-sm">{format(time)}</span>
         <div
-            class="grow h-2 bg-border rounded-lg overflow-hidden touch-none"
+            class="grow h-2 bg-light-background-light rounded-lg overflow-hidden touch-none"
             on:pointerdown={progressTrack}
         >
             <div

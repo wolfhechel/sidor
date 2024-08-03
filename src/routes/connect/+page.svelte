@@ -39,7 +39,7 @@
         on:submit={() => connect()}
     >
         <h2 class="text-base font-semibold leading-7">Connect to Miniflux</h2>
-        <p class="mt-1 mb-6 text-sm leading-6 text-fg-secondary">
+        <p class="mt-1 mb-6 text-sm leading-6 text-light-foreground-secondary">
             Enter host address and API token to connect.
         </p>
 
@@ -54,7 +54,7 @@
         {/if}
         <div class="mb-4">
             <label
-                class="block text-sm text-fg-secondary font-bold mb-2"
+                class="block text-sm text-light-foreground-secondary font-bold mb-2"
                 for="host">Host</label
             >
             <input
@@ -68,7 +68,7 @@
 
         <div class="mb-4">
             <label
-                class="block text-sm text-fg-secondary font-bold mb-2"
+                class="block text-sm text-light-foreground-secondary font-bold mb-2"
                 for="token">Token</label
             >
             <input
