@@ -13,39 +13,78 @@ export interface Category {
     id: number;
     title: string;
     user_id: number;
+    hide_globally: boolean;
 }
 
 export interface Enclosure {
     id: number;
+    user_id: number;
+    entry_id: number;
     url: string;
     mime_type: string;
+    size: number;
     media_progression: number;
+}
+
+export interface Icon {
+    feed_id: number;
+    icon_id: number;
 }
 
 export interface Feed {
     id: number;
     user_id: number;
     title: string;
+    checked_at: string;
+    next_check_at: string;
+    etag_header: string;
+    last_modified_header: string;
+    parsing_error_message: string;
+    parsing_error_count: number;
+    scraper_rules: string;
+    rewrite_rules: string;
+    crawler: boolean;
+    blocklist_rules: string;
+    keeplist_rules: string;
+    urlrewrite_rules: string;
+    user_agent: string;
+    cookie: string;
+    username: string;
+    password: string;
+    disabled: boolean;
+    no_media_player: boolean;
+    ignore_http_cache: boolean;
+    allow_self_signed_certificates: boolean;
+    fetch_via_proxy: boolean;
+    hide_globally: boolean;
+    apprise_service_urls: string;
+    disable_http2: boolean;
     category: Category;
     feed_url: string;
+    site_url: string;
+    icon: Icon;
 }
 
 export interface Entry {
     id: number;
     user_id: number;
     feed_id: number;
+    status: 'read' | 'unread' | 'removed';
+    hash: string;
     title: string;
     url: string;
     comments_url: string;
-    author: string;
-    content: string;
     published_at: string;
     created_at: string;
     changed_at: string;
-    status: 'read' | 'unread' | 'removed';
-    feed: Feed;
+    content: string;
+    author: string;
+    share_code: string;
     starred: boolean;
+    reading_time: number;
+    feed: Feed;
     enclosures: Enclosure[];
+    tags: string[] | null;
 }
 
 export interface Pagination<T> {
