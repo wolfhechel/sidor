@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { domain } from "$lib/utils";
+    import domain from "$lib/utils/domain";
 
     export let url: string;
     export let size: string | number = 128;

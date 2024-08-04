@@ -3,7 +3,8 @@
 
 	import { client } from "$lib/store";
 	import { type Entry, type Pagination } from "$lib/api";
-	import { groupByTime, type Grouped } from "$lib/utils";
+	import { sortByTime, relativeTimeToGroup } from "$lib/utils/time";
+	import groupBy, { type Grouped } from '$lib/utils/groupBy';
 
 	import { Post, initScrollProgress, scrollProgressParent } from "./Post";
 
@@ -62,9 +63,11 @@
 	const groupedEntries: Readable<Grouped<Entry>[]> = derived(
 		[query],
 		([$query]) => {
-			let allEntries = pagesConcatenated($query.data?.pages || []);
+			let allEntries: Entry[] = pagesConcatenated($query.data?.pages || []);
 
-			return groupByTime(allEntries, "published_at");
+			allEntries = sortByTime(allEntries, "published_at");
+
+			return groupBy(allEntries, "published_at", relativeTimeToGroup);
 		},
 	);
 
@@ -138,7 +141,6 @@
 		void
 	>({
 		mutationFn: async ({ detail }) => {
-			console.log(detail);
 			await $client.put(`entries/${detail.id}/bookmark`, {});
 		},
 		onMutate: async ({ detail }) => {

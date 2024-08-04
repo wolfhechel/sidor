@@ -76,7 +76,7 @@
 
 <script lang="ts">
     import Spinner from "./Spinner.svelte";
-    import { domain } from "$lib/utils";
+    import domain from "$lib/utils/domain";
 
     export let url: string;
 

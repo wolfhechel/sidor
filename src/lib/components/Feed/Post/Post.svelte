@@ -1,34 +1,9 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
 
-    import dayjs from "dayjs";
-    import updateLocale from "dayjs/plugin/updateLocale";
-
-    dayjs.extend(updateLocale);
-    dayjs.updateLocale("en", {
-        relativeTime: {
-            future: "in %s",
-            past: "%s",
-            s: "1m",
-            m: "1m",
-            mm: "%dm",
-            h: "1h",
-            hh: "%dh",
-            d: "1d",
-            dd: "%dd",
-            M: "1mo",
-            MM: "%dmo",
-            y: "1y",
-            yy: "%dy",
-        },
-    });
-
-    import {
-        domain,
-        findEnclosure,
-        findExternalLinks,
-        removeDomElements,
-    } from "$lib/utils";
+    import { findEnclosure } from "$lib/utils/api";
+    import domain from '$lib/utils/domain';
+    import { findExternalLinks, removeDomElements } from "$lib/utils/dom";
 
     import Time from "svelte-time";
 

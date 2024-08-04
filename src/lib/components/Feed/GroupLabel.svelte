@@ -2,4 +2,4 @@
     export let label: string;
 </script>
 
-<time class="p-4 font-bold text-sm text-accent capitalize pt-16">{label}</time>
+<time class="p-4 font-bold text-lg text-light-primary pt-16">{label}</time>
