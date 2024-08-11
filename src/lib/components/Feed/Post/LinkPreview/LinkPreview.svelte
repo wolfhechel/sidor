@@ -75,8 +75,8 @@
 </script>
 
 <script lang="ts">
-    import Spinner from "./Spinner.svelte";
     import domain from "$lib/utils/domain";
+    import LinkPreviewSkeleton from "./LinkPreviewSkeleton.svelte";
 
     export let url: string;
 
@@ -104,45 +104,65 @@
             return Promise.resolve(response);
         }
     };
+
+    $: imageError = false;
+    $: imageLoaded = false;
 </script>
 
 <aside
     class="shadow overflow-hidden border flex flex-col justify-center items-center my-4"
 >
-    {#await load(url)}
-        <div class="flex flex-col p-4 gap-1">
-            <Spinner />
-        </div>
-    {:then response}
-        {@const urlDomain = domain(url)}
-        <a
-            class="flex flex-col md:flex-row no-underline w-full"
-            href={url}
-            target="_blank"
-        >
-            {#if response.image}
-                <img
-                    class="w-full h-[250px] md:h-[150px] md:w-auto md:aspect-square object-cover object-center"
-                    src={getAbsoluteAssetUrl(url, response.image)}
-                    alt={`Shared image from ${url}`}
-                />
-            {/if}
-            <div class="flex flex-col p-4 gap-1">
-                <span class="text-light-foreground-secondary text-xs"
-                    >{urlDomain}</span
+    <div class="flex flex-col md:flex-row w-full">
+        {#await load(url)}
+            <LinkPreviewSkeleton hasImage={true}>
+                <div class="bg-slate-200 animate-pulse" slot="image" />
+                <div class="rounded bg-slate-200 w-40" slot="site">&nbsp;</div>
+                <div class="rounded bg-slate-200" slot="title">&nbsp;</div>
+                <div class="rounded bg-slate-200 h-14" slot="description">
+                    &nbsp;
+                </div>
+            </LinkPreviewSkeleton>
+        {:then response}
+            <!-- svelte-ignore a11y-missing-attribute -->
+            <LinkPreviewSkeleton
+                hasImage={response.image !== undefined && !imageError}
+            >
+                <svelte:fragment slot="image">
+                    {#if response.image}
+                        <img
+                            class="full object-cover object-center bg-slate-200"
+                            src={getAbsoluteAssetUrl(url, response.image) +
+                                "dsada"}
+                            on:error={() => (imageError = true)}
+                            on:load={() => (imageLoaded = true)}
+                        />
+                    {/if}
+                </svelte:fragment>
+                <svelte:fragment slot="site">{domain(url)}</svelte:fragment>
+                <a
+                    class="underline line-clamp-1"
+                    href={url}
+                    target="_blank"
+                    slot="title">{response.title}</a
                 >
-                <span>{response.title}</span>
-                {#if response.description}
-                    <span class="text-light-foreground-secondary line-clamp-3"
-                        >{response.description}</span
-                    >
-                {/if}
-            </div>
-        </a>
-    {:catch error}
-        <div class="flex flex-col p-4 gap-1">
-            <span>Failed to load link preview</span>
-            <span class="text-light-foreground-secondary">{error}</span>
-        </div>
-    {/await}
+                <svelte:fragment slot="description"
+                    >{response.description}</svelte:fragment
+                >
+            </LinkPreviewSkeleton>
+        {:catch error}
+            <LinkPreviewSkeleton>
+                <svelte:fragment slot="site">{domain(url)}</svelte:fragment>
+                <a
+                    class="underline line-clamp-1"
+                    href={url}
+                    target="_blank"
+                    slot="title">{url}</a
+                >
+                <svelte:fragment slot="description">
+                    Failed to load link preview<br />
+                    {error}</svelte:fragment
+                >
+            </LinkPreviewSkeleton>
+        {/await}
+    </div>
 </aside>
