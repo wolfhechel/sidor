@@ -1,7 +1,6 @@
-import * as child_process from 'node:child_process';
-
-import adapter from '@sveltejs/adapter-static';
+import adapter from '@sveltejs/adapter-cloudflare';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+import * as child_process from 'node:child_process';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -11,13 +10,7 @@ const config = {
 
 	kit: {
 		// See https://kit.svelte.dev/docs/adapters for more information about adapters.
-		adapter: adapter({
-			fallback: '404.html'
-		}),
-		paths: {
-			base: process.env.NODE_ENV === 'production' ? process.env.BASE_PATH : '',
-			relative: false
-		},
+		adapter: adapter(),
 		version: {
 			name: child_process.execSync('git rev-parse HEAD').toString().trim()
 		}
