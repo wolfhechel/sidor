@@ -20,8 +20,8 @@
 	} from "@tanstack/svelte-query";
 
 	export let endpoint: string;
-	export let feedId: string;
 	export let starred: boolean | undefined = undefined;
+	export let globallyVisible: boolean | undefined = undefined;
 
 	const scrollProgress = initScrollProgress();
 
@@ -33,7 +33,7 @@
 
 	const query = createInfiniteQuery(
 		derived(client, ($client) => ({
-			queryKey: ["entries", feedId],
+			queryKey: [endpoint],
 			queryFn: async ({ pageParam }: { pageParam: number }) => {
 				let params: Record<string, string | string[]> = {
 					direction: "desc",
@@ -44,6 +44,10 @@
 
 				if (starred !== undefined) {
 					params["starred"] = starred ? "true" : "false";
+				}
+
+				if (globallyVisible != undefined) {
+					params["globally_visible"] = starred ? "true": "false";
 				}
 
 				return await $client.get<Pagination<Entry>>(endpoint, params);
@@ -119,7 +123,7 @@
 		},
 		onMutate: async ({ detail }) => {
 			await stallCacheWhileMutate(
-				["entries", feedId],
+				["endpoint"],
 				detail.id,
 				(entry) => {
 					entry.status = detail.status as typeof entry.status;
@@ -145,7 +149,7 @@
 		},
 		onMutate: async ({ detail }) => {
 			await stallCacheWhileMutate(
-				["entries", feedId],
+				["endpoint"],
 				detail.id,
 				(entry) => {
 					entry.starred = !entry.starred;
@@ -158,7 +162,6 @@
 </script>
 
 <section
-	id={`${feedId}`}
 	use:scrollProgressParent={scrollProgress}
 	class="full flex flex-col overflow-y-scroll scroll-smooth no-scrollbar gap-2"
 >
@@ -168,7 +171,6 @@
 			<Post
 				entry={obj}
 				entryIndex={index}
-				{feedId}
 				on:setStatus={$updateEntryStatus.mutate}
 				on:toggleBookmark={$updateEntryStarred.mutate}
 			/>

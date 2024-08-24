@@ -22,7 +22,6 @@
 
     export let entry: Entry;
     export let entryIndex: number;
-    export let feedId: string;
 
     let contentElement: HTMLElement;
 
@@ -46,7 +45,7 @@
             ? entry.url
             : findExternalLinks(entry.content).at(0);
 
-    const constructEntryId = (feedId: string, entryIndex: number): string => {
+    const constructEntryId = (feedId: number, entryIndex: number): string => {
         return `entry-${feedId}-${entryIndex}`;
     };
 
@@ -68,7 +67,7 @@
 
 <article
     bind:this={contentElement}
-    id={constructEntryId(feedId, entryIndex)}
+    id={constructEntryId(entry.feed_id, entryIndex)}
     class="flex flex-col bg-white contain-layout contain-paint border-b"
 >
     <header class="sticky top-0 border-b bg-white z-10">
@@ -98,7 +97,7 @@
                     on:click={() => {
                         document
                             .querySelector(
-                                `#${constructEntryId(feedId, entryIndex + 1)}`,
+                                `#${constructEntryId(entry.feed_id, entryIndex + 1)}`,
                             )
                             ?.scrollIntoView();
                     }}
