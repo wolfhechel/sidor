@@ -1,6 +1,6 @@
-const domParser = new DOMParser();
-
 export const findExternalLinks = (content: string): string[] => {
+    const domParser = new DOMParser();
+
     /* Locates links posted as links, i.e. title matches href */
     let document = domParser.parseFromString(content, "text/html");
 
@@ -12,6 +12,8 @@ export const findExternalLinks = (content: string): string[] => {
 };
 
 export const removeDomElements = (html: string, selector: string): string => {
+    const domParser = new DOMParser();
+
     let document: Document = domParser.parseFromString(html, "text/html");
 
     document
