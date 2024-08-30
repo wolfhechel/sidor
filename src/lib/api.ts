@@ -150,6 +150,8 @@ export class Client {
             return Promise.reject(new Error("client not authenticated"));
         }
 
+        console.log(data, JSON.stringify(data));
+
         return fetch(`${this.host}/v1/${path}`, {
             headers: {
                 'X-Auth-Token': this.token!,

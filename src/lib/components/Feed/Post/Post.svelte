@@ -7,7 +7,7 @@
 
     import Time from "svelte-time";
 
-    import type { Entry } from "$lib/api";
+    import type { Enclosure, Entry } from "$lib/api";
 
     import Favicon from "./Favicon.svelte";
     import LinkPreview from "./LinkPreview";
@@ -63,6 +63,18 @@
             id: entry.id,
         });
     };
+
+    const setEnclosureMediaProgression = (enclosure: Enclosure, detail: { currentTime: number, duration: number}) => {
+        dispatch("updateMediaProgression", {
+            enclosureId: enclosure.id,
+            entryId: enclosure.entry_id,
+            time: Math.floor(detail.currentTime)
+        });
+
+        if (detail.currentTime >= detail.duration * 0.9) {
+            setStatus("read");
+        }
+    }
 </script>
 
 <article
@@ -124,18 +136,23 @@
         <section class="relative flex flex-col px-4 max-w-[65ch]">
             <AudioPlayer
                 src={audio.url}
+                seek={audio.media_progression}
                 metadata={new MediaMetadata({
                     artist: entry.feed.title,
                     title: entry.title,
                 })}
+                on:progress={({ detail }) => {
+                    setEnclosureMediaProgression(audio, detail);
+                }}
             />
         </section>
     {:else if youTubeVideo}
         <section class="relative flex flex-col">
             <YouTube.Player
                 url={youTubeVideo.url}
-                on:ended={() => {
-                    setStatus("read");
+                seek={youTubeVideo.media_progression}
+                on:progress={({ detail }) => {
+                    setEnclosureMediaProgression(youTubeVideo, detail);
                 }}
             />
         </section>

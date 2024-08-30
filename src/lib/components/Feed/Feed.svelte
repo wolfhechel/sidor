@@ -123,7 +123,7 @@
 		},
 		onMutate: async ({ detail }) => {
 			await stallCacheWhileMutate(
-				["endpoint"],
+				[endpoint],
 				detail.id,
 				(entry) => {
 					entry.status = detail.status as typeof entry.status;
@@ -149,10 +149,44 @@
 		},
 		onMutate: async ({ detail }) => {
 			await stallCacheWhileMutate(
-				["endpoint"],
+				[endpoint],
 				detail.id,
 				(entry) => {
 					entry.starred = !entry.starred;
+
+					return true;
+				},
+			);
+		},
+	});
+
+	const updateEnclosureMediaProgression = createMutation<
+		void,
+		Error,
+		{
+			detail: {
+				enclosureId: number;
+				entryId: number;
+				time: number;
+			};
+		},
+		void
+	>({
+		mutationFn: async ({ detail }) => {
+			await $client.put(`enclosures/${detail.enclosureId}`, {
+				media_progression: detail.time
+			});
+		},
+		onMutate: async ({ detail }) => {
+			await stallCacheWhileMutate(
+				[endpoint],
+				detail.entryId,
+				(entry) => {
+					let enclosure = entry.enclosures.find((enclosure) => enclosure.id == detail.enclosureId);
+
+					if (enclosure) {
+						enclosure.media_progression = detail.time;
+					}
 
 					return true;
 				},
@@ -173,6 +207,7 @@
 				entryIndex={index}
 				on:setStatus={$updateEntryStatus.mutate}
 				on:toggleBookmark={$updateEntryStarred.mutate}
+				on:updateMediaProgression={$updateEnclosureMediaProgression.mutate}
 			/>
 		{/each}
 	{/each}

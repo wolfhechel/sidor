@@ -1,6 +1,9 @@
 <script lang="ts" context="module">
     /// <reference path="YT.d.ts" />
 
+    const YOUTUBE_HOST = 'https://www.youtube-nocookie.com'
+    const MEDIA_PROGRESSION_UPDATE_INTERVAL = 5;
+
     import { writable, type Writable } from "svelte/store";
 
     export const currentPlayer: Writable<YT.Player | null> = writable(null);
@@ -26,12 +29,21 @@
     import Thumbnail from "./Thumbnail.svelte";
 
     export let url: string;
+    export let seek: number = 0;
 
     let videoId: string = parseYouTubeId(url);
     let player: YT.Player;
     let el: HTMLElement;
+    let updateProgressInterval: string | number | NodeJS.Timeout | undefined;
 
     const dispatch = createEventDispatcher();
+
+    const updateMediaProgression = (player: YT.Player) => {
+        dispatch("progress", {
+            currentTime: player.getCurrentTime(),
+            duration: player.getDuration()
+        });
+    }
 
     const loadMetadata = async (
         videoId: string,
@@ -47,7 +59,7 @@
         html: string;
     }> => {
         return fetch(
-            `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`,
+            `${YOUTUBE_HOST}/oembed?url=${YOUTUBE_HOST}/watch?v=${videoId}&format=json`,
         ).then((response) => response.json());
     };
 
@@ -59,18 +71,20 @@
         player = new YT.Player(el, {
             height,
             width,
-            host: "https://www.youtube-nocookie.com",
+            host: `${YOUTUBE_HOST}`,
             videoId,
             events: {
                 onReady: (event) => {
+                    if (seek > 0) {
+                        event.target.seekTo(seek, true);
+                    }
+
                     event.target.playVideo();
                 },
                 onStateChange: ({ data, target }) => {
                     switch (data) {
                         case YT.PlayerState.PLAYING:
                             {
-                                dispatch("playing", target);
-
                                 if (
                                     $currentPlayer &&
                                     $currentPlayer != target
@@ -78,17 +92,23 @@
                                     $currentPlayer.pauseVideo();
                                 }
 
+                                updateProgressInterval = setInterval(() => {
+                                    updateMediaProgression(target);
+                                }, 1000 * MEDIA_PROGRESSION_UPDATE_INTERVAL);
+
                                 $currentPlayer = target;
                             }
                             break;
                         case YT.PlayerState.ENDED:
                             {
-                                dispatch("ended", target);
-
                                 if ($currentPlayer == target) {
                                     $currentPlayer = null;
                                 }
                             }
+                            break;
+                        case YT.PlayerState.PAUSED:
+                            clearInterval(updateProgressInterval);
+                            updateMediaProgression(target);
                             break;
                         default:
                             break;

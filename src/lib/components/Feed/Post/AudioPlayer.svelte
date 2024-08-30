@@ -1,20 +1,33 @@
 <script lang="ts" context="module">
     export const currentAudio: Writable<HTMLAudioElement | null> =
         writable(null);
+
+    const MEDIA_PROGRESSION_UPDATE_INTERVAL = 5;
 </script>
 
 <script lang="ts">
     import { writable, type Writable } from "svelte/store";
+    import { createEventDispatcher, onMount } from "svelte";
     import type { PointerEventHandler } from "svelte/elements";
-
     import Icon from "@iconify/svelte";
 
     export let src: string;
     export let metadata: MediaMetadata;
+    export let seek: number = 0;
 
     let time = 0;
     let duration = 0;
     let paused = true;
+    let updateProgressInterval: string | number | NodeJS.Timeout | undefined;
+
+    const dispatch = createEventDispatcher();
+    
+    const updateMediaProgression = () => {
+        dispatch("progress", {
+            currentTime: time,
+            duration: duration
+        });
+    }
 
     const format = (time: number): string => {
         if (isNaN(time)) return "...";
@@ -48,6 +61,7 @@
         window.addEventListener(
             "pointerup",
             () => {
+                updateMediaProgression();
                 window.removeEventListener("pointermove", seek);
             },
             {
@@ -55,6 +69,10 @@
             },
         );
     };
+
+    onMount(() => {
+        time = seek;
+    })
 </script>
 
 <div class="flex flex-row items-center gap-4 select-none my-4">
@@ -72,9 +90,19 @@
 
                 navigator.mediaSession.metadata = metadata;
             }
+
+            updateProgressInterval = setInterval(() => {
+                updateMediaProgression();
+            }, 1000 * MEDIA_PROGRESSION_UPDATE_INTERVAL);
+        }}
+        on:pause={() => {
+            clearInterval(updateProgressInterval);
+            updateMediaProgression();
         }}
         on:ended={() => {
-            time = 0;
+            clearInterval(updateProgressInterval);
+            updateMediaProgression();
+            
             navigator.mediaSession.metadata = null;
         }}
     ></audio>
@@ -99,7 +127,7 @@
         >
             <div
                 class="h-full bg-accent"
-                style:width="{(time / duration) * 100}%"
+                style:width="{(duration > 0 ? (time / duration) : 0) * 100}%"
             ></div>
         </div>
         <span class="text-sm">{duration ? format(duration) : "--:--"}</span>
